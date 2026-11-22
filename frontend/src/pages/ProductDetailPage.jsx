@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ChevronRight, Plus, Minus, ShoppingBag, ArrowLeft,
-  CheckCircle, Package, Leaf, Clock, MapPin, Shield
-} from 'lucide-react'
+import { ChevronRight, Plus, Minus, ShoppingBag, ArrowLeft, CheckCircle, Package, Leaf, Clock, MapPin, Shield } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
 import { getProductBySlug, BADGE_MAP, fmt, PRODUCTS } from '../data/products'
+import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/product-detail.css'
 
@@ -51,37 +49,7 @@ export default function ProductDetailPage() {
 
   return (
     <>
-      {/* ── Navbar ── */}
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo">
-            <span className="nav-logo-dot" aria-hidden="true" />
-            Tomat'chef
-          </Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-          </nav>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-              <ShoppingBag size={20} color="#fff" />
-              <AnimatePresence>
-                {count > 0 && (
-                  <motion.span
-                    className="hp-cart-count"
-                    key={count}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                    aria-hidden="true"
-                  >
-                    {count}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar currentPage="boutique" />
 
       <main className="pd-main">
         <div className="page-container">

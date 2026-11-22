@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  CreditCard, Lock, ChevronDown, CheckCircle,
-  ShoppingBag, Package, ArrowRight
-} from 'lucide-react'
+import { CreditCard, Lock, ChevronDown, CheckCircle, Package, ArrowRight } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { fmt } from '../data/products'
+import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/payment.css'
 
@@ -93,11 +91,7 @@ export default function PaymentPage() {
   if (success) {
     return (
       <>
-        <header className="nav">
-          <div className="nav-inner">
-            <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-          </div>
-        </header>
+        <Navbar />
         <main className="pay-main">
           <div className="pay-container">
             <motion.div
@@ -136,14 +130,7 @@ export default function PaymentPage() {
 
   return (
     <>
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-          </nav>
-        </div>
-      </header>
+      <Navbar currentPage="boutique" />
 
       <main className="pay-main">
         <div className="pay-container">

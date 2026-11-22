@@ -126,7 +126,31 @@ ul, ol { list-style: none; }
   border-radius: var(--r-full);
   transition: background 150ms ease, color 150ms ease;
 }
-.nav-link:hover { background: rgba(255,255,255,.18); color: #fff; }
+.nav-link:hover  { background: rgba(255,255,255,.18); color: #fff; }
+.nav-link.active { background: rgba(255,255,255,.22); color: #fff; }
+
+/* ── Nav burger / drawer (mobile) ── */
+.nav-burger {
+  display: none; background: none; border: none; cursor: pointer;
+  padding: 4px; border-radius: var(--r-md);
+}
+@media (max-width: 680px) {
+  .nav-burger { display: flex; align-items: center; justify-content: center; }
+  .desktop-nav { display: none !important; }
+}
+.nav-drawer {
+  position: absolute; top: var(--nav-h); left: 0; right: 0;
+  background: var(--tomato); z-index: 99; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+}
+.nav-drawer-link {
+  padding: 14px max(24px, 5vw); font-size: .9rem; font-weight: 600;
+  color: rgba(255,255,255,.9); border-top: 1px solid rgba(255,255,255,.12);
+  transition: background 150ms ease;
+}
+.nav-drawer-link:hover { background: rgba(255,255,255,.12); }
+
 .nav-btn {
   display: inline-flex;
   align-items: center;

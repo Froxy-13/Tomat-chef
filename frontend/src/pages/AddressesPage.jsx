@@ -1,46 +1,11 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ShoppingBag, Plus, MapPin, Phone, Home, Pencil, Trash2,
-  X, User, Package, LogOut, CheckCircle, AlertCircle
-} from 'lucide-react'
-import { useCart } from '../context/CartContext'
+import { Plus, MapPin, Phone, Home, Pencil, Trash2, X, CheckCircle, AlertCircle } from 'lucide-react'
+import Navbar from '../components/Navbar'
+import ProfileSidebar from '../components/ProfileSidebar'
 import '../styles/globals.css'
 import '../styles/profile.css'
 import '../styles/addresses.css'
-
-const NAV_ITEMS = [
-  { to: '/profil',          label: 'Mon profil',    icon: User },
-  { to: '/profil/adresses', label: 'Mes adresses',  icon: MapPin },
-  { to: '/mes-commandes',   label: 'Mes commandes', icon: Package },
-]
-
-function ProfileSidebar({ active }) {
-  return (
-    <div className="prf-sidebar">
-      <div className="prf-sidebar-head">
-        <div className="prf-avatar">F</div>
-        <div className="prf-sidebar-name">Fatimata Diallo</div>
-        <div className="prf-sidebar-email">diallofatimata353@gmail.com</div>
-      </div>
-      <nav className="prf-nav" aria-label="Navigation profil">
-        {NAV_ITEMS.map(item => {
-          const Icon = item.icon
-          return (
-            <Link key={item.to} to={item.to} className={`prf-nav-item${active === item.to ? ' active' : ''}`}>
-              <Icon size={16} /> {item.label}
-            </Link>
-          )
-        })}
-        <div className="prf-nav-divider" />
-        <Link to="/auth" className="prf-nav-item" style={{ color: 'var(--tomato)' }}>
-          <LogOut size={16} /> Déconnexion
-        </Link>
-      </nav>
-    </div>
-  )
-}
 
 const EMPTY_FORM = { name: '', phone: '', address: '', city: '', quartier: '', isDefault: false }
 
@@ -50,7 +15,6 @@ const INITIAL_ADDRESSES = [
 ]
 
 export default function AddressesPage() {
-  const { count } = useCart()
   const [addresses, setAddresses] = useState(INITIAL_ADDRESSES)
   const [modalOpen, setModalOpen] = useState(false)
   const [editId, setEditId]       = useState(null)
@@ -113,23 +77,7 @@ export default function AddressesPage() {
 
   return (
     <>
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-            <Link to="/mes-commandes" className="nav-link">Mes commandes</Link>
-          </nav>
-          <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-            <ShoppingBag size={20} color="#fff" />
-            {count > 0 && (
-              <motion.span className="hp-cart-count" key={count} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
-                {count}
-              </motion.span>
-            )}
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="adr-main">
         <div className="page-container">

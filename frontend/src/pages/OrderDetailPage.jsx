@@ -1,13 +1,10 @@
 import { useState } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ShoppingBag, ChevronLeft, Package, MapPin, Phone,
-  User, Truck, CheckCircle, Clock, XCircle, AlertTriangle
-} from 'lucide-react'
+import { ChevronLeft, Package, MapPin, Phone, User, Truck, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
 import { fmt } from '../data/products'
-import { useCart } from '../context/CartContext'
+import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/order-detail.css'
 
@@ -97,7 +94,6 @@ function stepState(step, currentStatus) {
 export default function OrderDetailPage() {
   const { number }  = useParams()
   const navigate    = useNavigate()
-  const { count }   = useCart()
   const [cancelling, setCancelling] = useState(false)
   const [cancelled, setCancelled]   = useState(false)
 
@@ -106,9 +102,7 @@ export default function OrderDetailPage() {
   if (!order) {
     return (
       <>
-        <header className="nav"><div className="nav-inner">
-          <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-        </div></header>
+        <Navbar currentPage="commandes" />
         <main className="od-main"><div className="page-container">
           <div style={{ textAlign: 'center', padding: '80px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
             <Package size={56} strokeWidth={1.5} color="var(--border)" />
@@ -132,23 +126,7 @@ export default function OrderDetailPage() {
 
   return (
     <>
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-            <Link to="/mes-commandes" className="nav-link">Mes commandes</Link>
-          </nav>
-          <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-            <ShoppingBag size={20} color="#fff" />
-            {count > 0 && (
-              <motion.span className="hp-cart-count" key={count} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
-                {count}
-              </motion.span>
-            )}
-          </Link>
-        </div>
-      </header>
+      <Navbar currentPage="commandes" />
 
       <main className="od-main">
         <div className="page-container">

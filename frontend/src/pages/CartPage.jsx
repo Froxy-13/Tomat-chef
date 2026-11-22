@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ShoppingBag, Trash2, Plus, Minus, ChevronRight,
-  MapPin, ArrowRight, Package, ShoppingCart
-} from 'lucide-react'
+import { Trash2, Plus, Minus, ChevronRight, MapPin, ArrowRight, Package, ShoppingCart } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
 import { fmt } from '../data/products'
+import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/cart.css'
 
@@ -93,26 +91,7 @@ export default function CartPage() {
 
   return (
     <>
-      {/* ── Navbar ── */}
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo">
-            <span className="nav-logo-dot" aria-hidden="true" />
-            Tomat'chef
-          </Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-          </nav>
-          <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-            <ShoppingBag size={20} color="#fff" />
-            {count > 0 && (
-              <motion.span className="hp-cart-count" key={count} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 20 }} aria-hidden="true">
-                {count}
-              </motion.span>
-            )}
-          </Link>
-        </div>
-      </header>
+      <Navbar currentPage="boutique" />
 
       <main className="cart-main">
         <div className="page-container">

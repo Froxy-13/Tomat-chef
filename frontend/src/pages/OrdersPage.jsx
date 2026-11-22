@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, Package, ChevronRight, Eye } from 'lucide-react'
+import { Package, ChevronRight, Eye } from 'lucide-react'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
 import { fmt } from '../data/products'
-import { useCart } from '../context/CartContext'
+import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/orders.css'
 
@@ -90,7 +90,6 @@ function matchFilter(order, filter) {
 
 export default function OrdersPage() {
   const [filter, setFilter] = useState('all')
-  const { count }           = useCart()
 
   const filtered = MOCK_ORDERS.filter(o => matchFilter(o, filter))
 
@@ -98,23 +97,7 @@ export default function OrdersPage() {
 
   return (
     <>
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-            <Link to="/mes-commandes" className="nav-link" aria-current="page">Mes commandes</Link>
-          </nav>
-          <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-            <ShoppingBag size={20} color="#fff" />
-            {count > 0 && (
-              <motion.span className="hp-cart-count" key={count} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
-                {count}
-              </motion.span>
-            )}
-          </Link>
-        </div>
-      </header>
+      <Navbar currentPage="commandes" />
 
       <main className="ord-main">
         <div className="page-container">

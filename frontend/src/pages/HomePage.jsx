@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ShoppingBag, Search, ChevronDown, X, Plus, Minus,
-  CheckCircle, User, LogOut, Package, MapPin, Filter
-} from 'lucide-react'
+import { ShoppingBag, Search, ChevronDown, X, Plus, Minus, CheckCircle, Filter } from 'lucide-react'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
 import { PRODUCTS, BADGE_MAP, fmt } from '../data/products'
 import { useCart } from '../context/CartContext'
+import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/home.css'
 
@@ -109,12 +107,11 @@ function HomeProductCard({ product, onAdd, index }) {
 
 /* ── Page HomePage ── */
 export default function HomePage() {
-  const [search, setSearch]           = useState('')
-  const [sort, setSort]               = useState('default')
-  const [toasts, setToasts]           = useState([])
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const [sort, setSort]     = useState('default')
+  const [toasts, setToasts] = useState([])
 
-  const { addItem, count } = useCart()
+  const { addItem } = useCart()
 
   const addToCart = (product, qty = 1) => {
     addItem(product, qty)
@@ -134,92 +131,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ── Navbar ── */}
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo">
-            <span className="nav-logo-dot" aria-hidden="true" />
-            Tomat'chef
-          </Link>
-
-          <nav className="nav-links desktop-nav" aria-label="Navigation">
-            <Link to="/home" className="nav-link" aria-current="page">Boutique</Link>
-            <Link to="/mes-commandes" className="nav-link">Mes commandes</Link>
-          </nav>
-
-          <div className="hp-nav-actions">
-            {/* Panier */}
-            <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-              <ShoppingBag size={20} color="#fff" />
-              <AnimatePresence>
-                {count > 0 && (
-                  <motion.span
-                    className="hp-cart-count"
-                    key={count}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                    aria-hidden="true"
-                  >
-                    {count}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Link>
-
-            {/* User menu */}
-            <div className="hp-user-wrap">
-              <button
-                className="hp-user-btn"
-                onClick={() => setUserMenuOpen(o => !o)}
-                aria-label="Menu utilisateur"
-                aria-expanded={userMenuOpen}
-                aria-haspopup="true"
-              >
-                <div className="hp-user-avatar">F</div>
-                <span className="hp-user-name">Fatimata</span>
-                <ChevronDown size={14} color="rgba(255,255,255,.8)" />
-              </button>
-
-              <AnimatePresence>
-                {userMenuOpen && (
-                  <>
-                    <div className="hp-menu-overlay" onClick={() => setUserMenuOpen(false)} aria-hidden="true" />
-                    <motion.div
-                      className="hp-user-menu"
-                      initial={{ opacity: 0, y: -8, scale: .97 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -8, scale: .97 }}
-                      transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
-                      role="menu"
-                    >
-                      <div className="hp-menu-header">
-                        <div className="hp-menu-name">Fatimata Diallo</div>
-                        <div className="hp-menu-email">diallofatimata353@gmail.com</div>
-                      </div>
-                      <div className="hp-menu-items">
-                        <Link to="/profil" className="hp-menu-item" role="menuitem">
-                          <User size={15} /> Mon profil
-                        </Link>
-                        <Link to="/mes-commandes" className="hp-menu-item" role="menuitem">
-                          <Package size={15} /> Mes commandes
-                        </Link>
-                        <Link to="/profil/adresses" className="hp-menu-item" role="menuitem">
-                          <MapPin size={15} /> Mes adresses
-                        </Link>
-                        <div className="hp-menu-divider" />
-                        <Link to="/auth" className="hp-menu-item hp-menu-item-danger" role="menuitem">
-                          <LogOut size={15} /> Déconnexion
-                        </Link>
-                      </div>
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar currentPage="boutique" />
 
       <main className="hp-main">
         <div className="page-container">

@@ -1,13 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ShoppingBag, MapPin, User, Phone, Home, ChevronRight,
-  ArrowRight, Package, AlertCircle
-} from 'lucide-react'
+import { MapPin, User, Phone, Home, ChevronRight, ArrowRight, Package, AlertCircle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
 import { fmt } from '../data/products'
+import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/checkout.css'
 
@@ -76,14 +74,7 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <>
-        <header className="nav">
-          <div className="nav-inner">
-            <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-            <Link to="/panier" className="hp-cart-btn" aria-label="Panier vide">
-              <ShoppingBag size={20} color="#fff" />
-            </Link>
-          </div>
-        </header>
+        <Navbar />
         <main className="co-main">
           <div className="page-container">
             <div className="co-empty-state">
@@ -102,22 +93,7 @@ export default function CheckoutPage() {
 
   return (
     <>
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-          </nav>
-          <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-            <ShoppingBag size={20} color="#fff" />
-            {count > 0 && (
-              <motion.span className="hp-cart-count" key={count} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
-                {count}
-              </motion.span>
-            )}
-          </Link>
-        </div>
-      </header>
+      <Navbar currentPage="boutique" />
 
       <main className="co-main">
         <div className="page-container">

@@ -1,53 +1,21 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ShoppingBag, User, MapPin, Package, LogOut,
-  Eye, EyeOff, CheckCircle, Lock, AlertCircle, Trash2
-} from 'lucide-react'
-import { useCart } from '../context/CartContext'
+import { User, Eye, EyeOff, CheckCircle, Lock, AlertCircle, Trash2 } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar'
+import ProfileSidebar from '../components/ProfileSidebar'
 import '../styles/globals.css'
 import '../styles/profile.css'
 import '../styles/orders.css'
 
-const NAV_ITEMS = [
-  { to: '/profil',          label: 'Mon profil',    icon: User },
-  { to: '/profil/adresses', label: 'Mes adresses',  icon: MapPin },
-  { to: '/mes-commandes',   label: 'Mes commandes', icon: Package },
-]
-
-function ProfileSidebar({ active }) {
-  return (
-    <div className="prf-sidebar">
-      <div className="prf-sidebar-head">
-        <div className="prf-avatar">F</div>
-        <div className="prf-sidebar-name">Fatimata Diallo</div>
-        <div className="prf-sidebar-email">diallofatimata353@gmail.com</div>
-      </div>
-      <nav className="prf-nav" aria-label="Navigation profil">
-        {NAV_ITEMS.map(item => {
-          const Icon = item.icon
-          return (
-            <Link key={item.to} to={item.to} className={`prf-nav-item${active === item.to ? ' active' : ''}`}>
-              <Icon size={16} /> {item.label}
-            </Link>
-          )
-        })}
-        <div className="prf-nav-divider" />
-        <Link to="/auth" className="prf-nav-item" style={{ color: 'var(--tomato)' }}>
-          <LogOut size={16} /> Déconnexion
-        </Link>
-      </nav>
-    </div>
-  )
-}
-
 export default function ProfilePage() {
-  const { count } = useCart()
+  const { user } = useAuth()
 
   const [form, setForm] = useState({
-    firstName: 'Fatimata', lastName: 'Diallo',
-    email: 'diallofatimata353@gmail.com', phone: '77 353 00 00',
+    firstName: user?.first_name ?? user?.name?.split(' ')[0] ?? '',
+    lastName:  user?.last_name  ?? user?.name?.split(' ').slice(1).join(' ') ?? '',
+    email:     user?.email  ?? '',
+    phone:     user?.phone  ?? '',
   })
   const [pwdForm, setPwdForm] = useState({ current: '', next: '', confirm: '' })
   const [showPwd, setShowPwd]       = useState({ current: false, next: false, confirm: false })
@@ -85,23 +53,7 @@ export default function ProfilePage() {
 
   return (
     <>
-      <header className="nav">
-        <div className="nav-inner">
-          <Link to="/" className="nav-logo"><span className="nav-logo-dot" />Tomat'chef</Link>
-          <nav className="nav-links desktop-nav">
-            <Link to="/home" className="nav-link">Boutique</Link>
-            <Link to="/mes-commandes" className="nav-link">Mes commandes</Link>
-          </nav>
-          <Link to="/panier" className="hp-cart-btn" aria-label={`Panier, ${count} article${count !== 1 ? 's' : ''}`}>
-            <ShoppingBag size={20} color="#fff" />
-            {count > 0 && (
-              <motion.span className="hp-cart-count" key={count} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 20 }}>
-                {count}
-              </motion.span>
-            )}
-          </Link>
-        </div>
-      </header>
+      <Navbar />
 
       <main className="prf-main">
         <div className="page-container">

@@ -154,6 +154,14 @@
   z-index: 0;
 }
 
+/* ── Erreur API ── */
+.auth-api-error {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(220,38,38,.08); border: 1px solid rgba(220,38,38,.2);
+  color: var(--tomato); font-size: .84rem; font-weight: 600;
+  padding: 10px 14px; border-radius: var(--r-lg);
+}
+
 /* ── Form header ── */
 .auth-form-header { margin-bottom: 28px; min-height: 76px; }
 .auth-form-title {
