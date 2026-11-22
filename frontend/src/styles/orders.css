@@ -1,0 +1,92 @@
+/* ── Main ── */
+.ord-main { padding: 40px 0 80px; min-height: calc(100svh - var(--nav-h)); }
+
+/* ── Header ── */
+.ord-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+.ord-title   { font-family: var(--font-head); font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 700; color: var(--fg); }
+.ord-sub     { color: var(--fg-muted); font-size: .88rem; margin-top: 4px; }
+
+/* ── Filter tabs ── */
+.ord-tabs {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  background: var(--bg-muted); border: 1.5px solid var(--border);
+  border-radius: var(--r-xl); padding: 5px;
+  margin-bottom: 28px; width: fit-content;
+}
+.ord-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: var(--r-lg);
+  font-size: .82rem; font-weight: 700; color: var(--fg-muted);
+  background: none; border: none; cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+  white-space: nowrap;
+}
+.ord-tab:hover { background: var(--bg-card); color: var(--fg); }
+.ord-tab.active { background: var(--bg-card); color: var(--tomato); box-shadow: var(--sh-sm); }
+.ord-tab-count {
+  min-width: 18px; height: 18px; border-radius: var(--r-full);
+  background: var(--tomato-tint); color: var(--tomato);
+  font-size: .65rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; padding: 0 4px;
+}
+.ord-tab.active .ord-tab-count { background: var(--tomato); color: #fff; }
+
+/* ── Liste ── */
+.ord-list { display: flex; flex-direction: column; gap: 14px; }
+
+/* ── Carte commande ── */
+.ord-card {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-xl); padding: 20px 24px;
+  box-shadow: var(--sh-sm);
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+.ord-card:hover { border-color: var(--tomato-light); box-shadow: var(--sh-md); }
+
+.ord-card-left   { display: flex; flex-direction: column; gap: 4px; min-width: 160px; }
+.ord-card-num    { font-family: var(--font-head); font-weight: 700; font-size: 1rem; color: var(--fg); }
+.ord-card-date   { font-size: .78rem; color: var(--fg-muted); }
+
+.ord-card-items  { flex: 1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; min-width: 0; }
+.ord-item-chip   {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .75rem; font-weight: 600; color: var(--fg-mid);
+  background: var(--bg-muted); border: 1px solid var(--border-light);
+  border-radius: var(--r-full); padding: 3px 10px; white-space: nowrap;
+}
+.ord-item-more   { font-size: .72rem; color: var(--fg-muted); font-weight: 600; padding: 3px 8px; }
+
+.ord-card-right  { display: flex; align-items: center; gap: 20px; flex-shrink: 0; flex-wrap: wrap; }
+.ord-card-total  { font-family: var(--font-head); font-weight: 700; font-size: 1.05rem; color: var(--fg); min-width: 90px; text-align: right; }
+.ord-card-actions{ display: flex; gap: 8px; }
+
+/* ── Statut badges ── */
+.ord-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: var(--r-full);
+}
+.ord-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+.ord-status.received   { background: rgba(59,130,246,.1);  color: #2563EB; }
+.ord-status.received   .ord-status-dot { background: #2563EB; }
+.ord-status.confirmed  { background: rgba(217,119,6,.1);   color: var(--gold-dark); }
+.ord-status.confirmed  .ord-status-dot { background: var(--gold); }
+.ord-status.preparing  { background: rgba(234,179,8,.1);   color: #A16207; }
+.ord-status.preparing  .ord-status-dot { background: #EAB308; }
+.ord-status.shipped    { background: rgba(139,92,246,.1);  color: #7C3AED; }
+.ord-status.shipped    .ord-status-dot { background: #8B5CF6; }
+.ord-status.delivered  { background: rgba(22,163,74,.1);   color: #15803D; }
+.ord-status.delivered  .ord-status-dot { background: #16A34A; }
+.ord-status.cancelled  { background: rgba(220,38,38,.08);  color: var(--tomato); }
+.ord-status.cancelled  .ord-status-dot { background: var(--tomato); }
+
+/* ── Empty ── */
+.ord-empty {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 16px; text-align: center; padding: 80px 24px;
+}
+.ord-empty-icon  { opacity: .4; display: flex; }
+.ord-empty-title { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; color: var(--fg); }
+.ord-empty-sub   { color: var(--fg-muted); font-size: .9rem; max-width: 44ch; line-height: 1.6; }
