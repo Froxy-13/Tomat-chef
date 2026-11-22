@@ -22,6 +22,11 @@ class ProductController extends Controller
         return response()->json(ProductResource::collection($products)->response()->getData(true));
     }
 
+    public function show(Product $product): JsonResponse
+    {
+        return (new ProductResource($product->load('images')))->response();
+    }
+
     public function store(StoreProductRequest $request): JsonResponse
     {
         $data         = $request->validated();
@@ -76,8 +81,8 @@ class ProductController extends Controller
         ]);
 
         $count = $product->images()->count();
-        if ($count >= 5) {
-            return response()->json(['message' => 'Maximum 5 images par produit.'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        if ($count >= 3) {
+            return response()->json(['message' => 'Maximum 3 images par produit.'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $path = $request->file('image')->store('products', 'public');

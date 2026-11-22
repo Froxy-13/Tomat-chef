@@ -1,40 +1,40 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Trash2, Plus, Minus, ChevronRight, MapPin, ArrowRight, Package, ShoppingCart } from 'lucide-react'
 import { useCart } from '../context/CartContext'
-import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
+import { getMeta } from '../data/products'
 import { fmt } from '../data/products'
+import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
+import ProductImage from '../components/ProductImage'
 import '../styles/globals.css'
 import '../styles/cart.css'
-
-const ICON_MAP = { tomato: TomatoIcon, jar: JarIcon, box: BoxIcon }
-
-const ZONES = [
-  { id: 1, name: 'Dakar Centre',    fee: 1000 },
-  { id: 2, name: 'Dakar Banlieue', fee: 1500 },
-  { id: 3, name: 'Régions',         fee: 3000 },
-]
 
 /* ── Cart item row ── */
 function CartItem({ item, onUpdate, onRemove }) {
   const { product, quantity } = item
-  const Icon = ICON_MAP[product.iconType] ?? TomatoIcon
+  const meta      = getMeta(product.slug) ?? {}
   const lineTotal = product.price * quantity
 
   return (
     <motion.div
-      className={`cart-item ${product.bg}`}
+      className={`cart-item ${meta.bg ?? product.bg ?? ''}`}
       layout
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20, height: 0, marginBottom: 0, overflow: 'hidden' }}
       transition={{ duration: .3, ease: [.22, 1, .36, 1] }}
     >
-      {/* Icône produit */}
+      {/* Image produit */}
       <div className="ci-icon">
-        <Icon size={52} />
+        <ProductImage
+          images={product.images}
+          slug={product.slug}
+          iconType={meta.iconType}
+          size={52}
+          alt={product.name}
+        />
       </div>
 
       {/* Infos */}
@@ -82,10 +82,19 @@ function CartItem({ item, onUpdate, onRemove }) {
 /* ── Page ── */
 export default function CartPage() {
   const { items, count, subtotal, updateItem, removeItem, clearCart } = useCart()
-  const [zoneId, setZoneId] = useState(1)
+  const [zones, setZones]   = useState([])
+  const [zoneId, setZoneId] = useState(null)
   const navigate = useNavigate()
 
-  const zone        = ZONES.find(z => z.id === zoneId)
+  useEffect(() => {
+    api.get('/delivery-zones').then(res => {
+      const list = (Array.isArray(res) ? res : res.data ?? []).filter(z => z.is_active)
+      setZones(list)
+      if (list.length > 0) setZoneId(list[0].id)
+    }).catch(() => {})
+  }, [])
+
+  const zone        = zones.find(z => z.id === zoneId)
   const deliveryFee = zone?.fee ?? 0
   const total       = subtotal + deliveryFee
 
@@ -166,13 +175,15 @@ export default function CartPage() {
                   <div className="cs-zone-select-wrap">
                     <select
                       className="field-input cs-zone-select"
-                      value={zoneId}
+                      value={zoneId ?? ''}
                       onChange={e => setZoneId(Number(e.target.value))}
                       aria-label="Choisir la zone de livraison"
+                      disabled={zones.length === 0}
                     >
-                      {ZONES.map(z => (
+                      {zones.length === 0 && <option value="">Chargement…</option>}
+                      {zones.map(z => (
                         <option key={z.id} value={z.id}>
-                          {z.name} — {fmt(z.fee)}
+                          {z.name} — {z.fee === 0 ? 'Gratuit' : fmt(z.fee)}
                         </option>
                       ))}
                     </select>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingBag, ChevronDown, User, Package, MapPin, LogOut, Menu, X } from 'lucide-react'
+import { ShoppingBag, ChevronDown, User, Package, MapPin, LogOut, Menu, X, Award } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 
@@ -100,9 +100,10 @@ export default function Navbar({ currentPage = '' }) {
                       <div className="hp-menu-items">
                         {!isAdmin && (
                           <>
-                            <Link to="/profil"          className="hp-menu-item" role="menuitem" onClick={() => setMenuOpen(false)}><User size={15} /> Mon profil</Link>
+                            <Link to="/profil"           className="hp-menu-item" role="menuitem" onClick={() => setMenuOpen(false)}><User size={15} /> Mon profil</Link>
                             <Link to="/mes-commandes"   className="hp-menu-item" role="menuitem" onClick={() => setMenuOpen(false)}><Package size={15} /> Mes commandes</Link>
                             <Link to="/profil/adresses" className="hp-menu-item" role="menuitem" onClick={() => setMenuOpen(false)}><MapPin size={15} /> Mes adresses</Link>
+                            <Link to="/profil/fidelite" className="hp-menu-item hp-menu-item-loyalty" role="menuitem" onClick={() => setMenuOpen(false)}><Award size={15} /> Fidélité</Link>
                           </>
                         )}
                         {isAdmin && (

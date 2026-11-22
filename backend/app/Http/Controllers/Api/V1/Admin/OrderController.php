@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
+use App\Services\LoyaltyService;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -90,6 +91,12 @@ class OrderController extends Controller
         }
 
         $order->update(['status' => $newStatus]);
+
+        // Attribution des points de fidélité à la livraison
+        if ($newStatus === 'delivered') {
+            $order->load('user');
+            LoyaltyService::awardForOrder($order);
+        }
 
         OrderStatusHistory::create([
             'order_id' => $order->id,

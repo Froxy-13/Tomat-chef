@@ -3,48 +3,26 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
   ShoppingBag, Truck, Shield, Star, ChevronRight,
-  MapPin, Clock, Leaf, ArrowRight, Menu, X
+  MapPin, Clock, Leaf, ArrowRight, Menu, X, Quote
 } from 'lucide-react'
 import { TomatoIcon } from '../components/TomatoIcon'
 import ProductImage from '../components/ProductImage'
+import { getMeta, fmt as fmtPrice } from '../data/products'
 import '../styles/globals.css'
 import '../styles/landing.css'
+import '../styles/reviews.css'
 
-/* ── Produits vitrine ── */
-const PRODUCTS = [
-  {
-    id: 1,
-    slug: 'double-concentre-70g',
-    name: 'Le sachet du quotidien',
-    volume: '70g · Sachet nomade',
-    price: '300 F',
-    badge: { label: 'Populaire', cls: 'badge-gold' },
-    iconType: 'tomato',
-    bg: 'grad-a',
-    desc: 'Toujours prêt dans votre placard. Parfait pour improviser un thiéboudienne ou un yassa sans avoir à y penser.',
-  },
-  {
-    id: 2,
-    slug: 'double-concentre-400g',
-    name: 'Le préféré des familles',
-    volume: '400g · Boîte métal',
-    price: '1 200 F',
-    badge: { label: 'Best-seller', cls: 'badge-red' },
-    iconType: 'jar',
-    bg: 'grad-b',
-    desc: 'La référence Tomat\'chef. Le format idéal pour les grandes tablées et les plats qui mijotent longuement.',
-  },
-  {
-    id: 3,
-    slug: 'double-concentre-2kg',
-    name: 'Le format des pros',
-    volume: '2,2kg · Grand format',
-    price: '5 500 F',
-    badge: { label: 'Promo −10%', cls: 'badge-green' },
-    iconType: 'box',
-    bg: 'grad-c',
-    desc: 'Pour les restaurateurs, traiteurs et grandes familles. Jusqu\'à 10% d\'économies sur chaque commande.',
-  },
+/* ── Méta statiques vitrine (fallback si API vide) ── */
+const BADGE_FALLBACK = [
+  { label: 'Populaire', cls: 'badge-gold' },
+  { label: 'Best-seller', cls: 'badge-red' },
+  { label: 'Promo −10%', cls: 'badge-green' },
+]
+const BG_CLASSES = ['grad-a', 'grad-b', 'grad-c']
+const DESC_FALLBACK = [
+  'Toujours prêt dans votre placard. Parfait pour improviser un thiéboudienne ou un yassa sans avoir à y penser.',
+  'La référence Tomat\'chef. Le format idéal pour les grandes tablées et les plats qui mijotent longuement.',
+  'Pour les restaurateurs, traiteurs et grandes familles. Jusqu\'à 10% d\'économies sur chaque commande.',
 ]
 
 const FEATURES = [
@@ -65,10 +43,15 @@ const scaleIn  = { hidden: { opacity: 0, scale: .92 }, visible: { opacity: 1, sc
 function ProductCard({ product, index }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
+  const meta = getMeta(product.slug) ?? {}
+  const badge = BADGE_FALLBACK[index] ?? { label: 'Nouveau', cls: 'badge-gold' }
+  const bg    = BG_CLASSES[index] ?? 'grad-a'
+  const desc  = DESC_FALLBACK[index] ?? ''
+
   return (
     <motion.article
       ref={ref}
-      className={`product-card ${product.bg}`}
+      className={`product-card ${bg}`}
       variants={scaleIn}
       initial="hidden"
       animate={inView ? 'visible' : 'hidden'}
@@ -77,26 +60,56 @@ function ProductCard({ product, index }) {
     >
       <div className="pc-image">
         <ProductImage
+          images={product.images}
           slug={product.slug}
-          iconType={product.iconType}
+          iconType={meta.iconType ?? 'tomato'}
           size={72}
           className="pc-svg-icon"
           alt={product.name}
         />
-        <span className={`badge ${product.badge.cls} pc-badge`}>{product.badge.label}</span>
+        <span className={`badge ${badge.cls} pc-badge`}>{badge.label}</span>
       </div>
       <div className="pc-body">
         <div className="pc-name">{product.name}</div>
-        <div className="pc-vol">{product.volume}</div>
-        <div className="pc-desc">{product.desc}</div>
+        <div className="pc-vol">{product.volume ?? product.weight ?? ''}</div>
+        <div className="pc-desc">{desc}</div>
         <div className="pc-foot">
-          <span className="pc-price">{product.price}</span>
+          <span className="pc-price">{fmtPrice(product.price)}</span>
           <Link to="/auth" className="btn btn-primary btn-sm pc-cta">
             Commander <ArrowRight size={14} />
           </Link>
         </div>
       </div>
     </motion.article>
+  )
+}
+
+/* ── Composant ReviewCard ── */
+function ReviewCard({ review, index }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-40px' })
+  return (
+    <motion.div
+      ref={ref}
+      className="review-card"
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: index * .08, duration: .4 }}
+    >
+      <div className="review-stars">
+        {[1,2,3,4,5].map(n => (
+          <Star key={n} size={14} fill={n <= review.rating ? 'currentColor' : 'none'} />
+        ))}
+      </div>
+      {review.comment
+        ? <p className="review-comment">"{review.comment}"</p>
+        : <p className="review-comment-empty">Avis sans commentaire</p>
+      }
+      <div className="review-footer">
+        <span className="review-author">{review.user_name}</span>
+        <span className="review-date">{new Date(review.created_at).toLocaleDateString('fr-SN', { month: 'short', year: 'numeric' })}</span>
+      </div>
+    </motion.div>
   )
 }
 
@@ -126,9 +139,25 @@ function FeatureCard({ feature, index }) {
 
 /* ── Page principale ── */
 export default function LandingPage() {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen]   = useState(false)
+  const [products, setProducts]   = useState([])
+  const [reviews, setReviews]     = useState([])
   const heroRef = useRef(null)
   const heroInView = useInView(heroRef, { once: true })
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/v1/products?per_page=3')
+      .then(r => r.json()).then(d => setProducts(d.data ?? d ?? []))
+      .catch(() => {})
+    fetch('http://127.0.0.1:8000/api/v1/reviews')
+      .then(r => r.json()).then(d => setReviews(d ?? []))
+      .catch(() => {})
+  }, [])
+
+  const vitrine = products.slice(0, 3)
+  const avgRating = reviews.length
+    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+    : null
 
   return (
     <>
@@ -144,6 +173,7 @@ export default function LandingPage() {
           <nav className="nav-links desktop-nav" aria-label="Navigation principale">
             <a href="#produits" className="nav-link">Produits</a>
             <a href="#avantages" className="nav-link">Pourquoi nous</a>
+            <a href="#avis" className="nav-link">Avis</a>
             <a href="#contact" className="nav-link">Contact</a>
             <Link to="/auth" className="nav-btn">
               <ShoppingBag size={15} /> Acheter
@@ -175,6 +205,7 @@ export default function LandingPage() {
             <nav className="mobile-nav-links" aria-label="Navigation mobile">
               <a href="#produits" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Produits</a>
               <a href="#avantages" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Pourquoi nous</a>
+              <a href="#avis" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Avis</a>
               <a href="#contact" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Contact</a>
               <Link to="/auth" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
                 <ShoppingBag size={16} /> Acheter maintenant
@@ -313,7 +344,12 @@ export default function LandingPage() {
             </motion.div>
 
             <div className="products-grid">
-              {PRODUCTS.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
+              {vitrine.length > 0
+                ? vitrine.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)
+                : [0,1,2].map(i => (
+                    <div key={i} className="product-card grad-a" style={{ opacity: .4, minHeight: 280, borderRadius: 20 }} />
+                  ))
+              }
             </div>
 
             <div className="products-cta">
@@ -346,6 +382,33 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        {/* ── Avis clients ── */}
+        {reviews.length > 0 && (
+          <section className="reviews-section" id="avis" aria-labelledby="sec-reviews">
+            <div className="reviews-header">
+              <span className="reviews-eyebrow">
+                <Star size={12} /> Avis clients
+              </span>
+              <h2 className="reviews-title" id="sec-reviews">Ce que disent nos clients</h2>
+              <p className="reviews-sub">Des centaines de familles sénégalaises font confiance à Tomat'Chef chaque semaine.</p>
+              {avgRating && (
+                <div className="reviews-avg">
+                  <span className="reviews-avg-num">{avgRating}</span>
+                  <div className="reviews-avg-stars">
+                    {[1,2,3,4,5].map(n => (
+                      <Star key={n} size={18} fill={n <= Math.round(Number(avgRating)) ? 'currentColor' : 'none'} color="#f59e0b" />
+                    ))}
+                  </div>
+                  <span className="reviews-avg-count">/ 5 · {reviews.length} avis</span>
+                </div>
+              )}
+            </div>
+            <div className="reviews-grid">
+              {reviews.slice(0, 6).map((r, i) => <ReviewCard key={r.id} review={r} index={i} />)}
+            </div>
+          </section>
+        )}
 
         {/* ── CTA Banner ── */}
         <section className="cta-banner" aria-labelledby="cta-title">
@@ -396,8 +459,8 @@ export default function LandingPage() {
               </div>
               <div className="footer-col">
                 <div className="footer-col-title">Contact</div>
-                <a href="mailto:diallofatimata353@gmail.com" className="footer-link">Email</a>
-                <span className="footer-link-muted">+221 77 000 00 00</span>
+                <a href="mailto:tomatchef@gmail.com" className="footer-link">tomatchef@gmail.com</a>
+                <a href="tel:+221781882583" className="footer-link">+221 78 188 25 83</a>
                 <span className="footer-link-muted">Dakar, Sénégal</span>
               </div>
             </div>

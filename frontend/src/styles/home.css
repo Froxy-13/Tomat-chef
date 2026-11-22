@@ -105,6 +105,8 @@
 .hp-menu-item:hover { background: var(--bg-muted); color: var(--fg); }
 .hp-menu-item-danger { color: var(--tomato); }
 .hp-menu-item-danger:hover { background: var(--tomato-tint); color: var(--tomato-dark); }
+.hp-menu-item-loyalty { color: #d97706; }
+.hp-menu-item-loyalty:hover { background: #fffbeb; color: #92400e; }
 .hp-menu-divider { height: 1px; background: var(--border-light); margin: 6px 0; }
 
 /* ── Page header ── */
@@ -210,13 +212,23 @@
 .hp-card:hover { border-color: var(--tomato-light); }
 
 .hp-card-img {
-  height: 160px;
+  height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
-.hp-card-icon { display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 10px rgba(0,0,0,.12)); }
+.hp-card-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,.12));
+}
+.hp-card-img .product-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
 .hp-card-badge { position: absolute; top: 10px; right: 10px; }
 .hp-stock-warn {
   position: absolute;

@@ -1,0 +1,526 @@
+/* ── Recipes public pages ─────────────────────────────────── */
+
+.rec-page {
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+/* Hero */
+.rec-hero {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 60%, #7f1d1d 100%);
+  padding: 80px 20px 50px;
+  text-align: center;
+  color: #fff;
+}
+.rec-hero-inner { max-width: 640px; margin: 0 auto; }
+.rec-hero-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fca5a5;
+  margin-bottom: 10px;
+}
+.rec-hero h1 {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800;
+  margin: 0 0 12px;
+  line-height: 1.15;
+}
+.rec-hero-sub { color: #d1d5db; font-size: 15px; margin-bottom: 28px; }
+
+.rec-hero-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50px;
+  padding: 10px 20px;
+  backdrop-filter: blur(8px);
+  color: #fff;
+}
+.rec-hero-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 14px;
+  flex: 1;
+  min-width: 0;
+}
+.rec-hero-search input::placeholder { color: rgba(255,255,255,0.5); }
+
+/* Main */
+.rec-main { max-width: 1200px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* Filters */
+.rec-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.rec-filter-btn {
+  padding: 7px 18px;
+  border-radius: 50px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.rec-filter-btn:hover { border-color: #dc2626; color: #dc2626; }
+.rec-filter-btn.active { background: #dc2626; border-color: #dc2626; color: #fff; }
+
+/* Grid */
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+/* Card */
+.rec-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s, box-shadow 0.18s;
+  display: flex;
+  flex-direction: column;
+}
+.rec-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+
+.rec-card-img {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+.rec-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+.rec-card:hover .rec-card-img img { transform: scale(1.05); }
+.rec-card-img-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #9ca3af;
+}
+
+.rec-featured-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+}
+.rec-category-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 50px;
+  backdrop-filter: blur(4px);
+}
+
+.rec-card-body { padding: 18px; display: flex; flex-direction: column; flex: 1; }
+.rec-card-title { font-size: 15px; font-weight: 700; margin: 0 0 6px; line-height: 1.3; color: #111827; }
+.rec-card-subtitle { font-size: 12px; color: #6b7280; line-height: 1.5; margin-bottom: 12px; flex: 1; }
+
+.rec-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 14px;
+}
+.rec-card-meta span { display: flex; align-items: center; gap: 4px; }
+
+.rec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 50px;
+}
+
+.rec-card-cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #dc2626;
+}
+
+.rec-loading, .rec-error, .rec-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6b7280;
+  font-size: 15px;
+}
+.rec-error { color: #ef4444; }
+
+/* ── Recipe Detail ─────────────────────────────────────────── */
+
+.rcd-hero {
+  position: relative;
+  min-height: 400px;
+  background-size: cover;
+  background-position: center;
+  background-color: #1f2937;
+  display: flex;
+  align-items: flex-end;
+}
+.rcd-hero-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.2);
+}
+.rcd-hero-overlay {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 70%, transparent 100%);
+  padding: 24px 20px 36px;
+}
+.rcd-hero-inner { max-width: 900px; margin: 0 auto; }
+
+.rcd-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 16px;
+  transition: color 0.15s;
+}
+.rcd-back:hover { color: #fff; }
+
+.rcd-category {
+  display: inline-block;
+  background: #dc2626;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 12px;
+  border-radius: 50px;
+  margin-bottom: 10px;
+}
+
+.rcd-title {
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 10px;
+  line-height: 1.2;
+}
+.rcd-subtitle { font-size: 14px; color: rgba(255,255,255,0.75); margin-bottom: 18px; max-width: 600px; }
+
+.rcd-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+.rcd-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 50px;
+  padding: 5px 12px;
+  backdrop-filter: blur(4px);
+}
+
+/* Body layout */
+.rcd-body {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 20px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .rcd-body { grid-template-columns: 1fr; }
+}
+
+.rcd-section { margin-bottom: 28px; }
+.rcd-section h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #fee2e2;
+}
+.rcd-section h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.rcd-tomato-qty {
+  font-size: 13px;
+  font-weight: 600;
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+
+.rcd-ingredients { list-style: none; padding: 0; margin: 0; }
+.rcd-ingredients li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+}
+.rcd-ingredients li:last-child { border-bottom: none; }
+.rcd-ingredients li.tc-highlight { background: #fef9f9; padding: 9px 8px; border-radius: 6px; margin: 2px 0; }
+.ing-amount { font-weight: 700; color: #374151; min-width: 70px; }
+.ing-name { color: #4b5563; display: flex; align-items: center; }
+
+.rcd-steps { list-style: none; padding: 0; margin: 0; counter-reset: steps; }
+.rcd-steps li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+.rcd-steps li:last-child { border-bottom: none; }
+.step-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: #dc2626;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+}
+.step-text { font-size: 14px; color: #374151; line-height: 1.6; padding-top: 4px; }
+
+.rcd-nutrition {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 14px;
+}
+.rcd-nutrition p { font-size: 13px; color: #166534; line-height: 1.6; margin: 0; }
+
+.rcd-chef-notes {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 14px;
+}
+.rcd-chef-notes h3 { color: #92400e; }
+.rcd-chef-notes p { font-size: 13px; color: #78350f; line-height: 1.6; margin: 0; }
+
+.rcd-footer-cta {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 20px 60px;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-primary:hover { background: #b91c1c; transform: translateY(-2px); }
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 50px;
+  border: 2px solid #d1d5db;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.btn-outline:hover { border-color: #374151; }
+
+/* ── Admin recipe form styles ──────────────────────────────── */
+
+.adm-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .adm-form-grid { grid-template-columns: 1fr; }
+}
+
+.adm-form-col { display: flex; flex-direction: column; gap: 16px; }
+
+.adm-form-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.adm-card-padded { padding: 20px 24px; }
+.adm-card-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.adm-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.adm-field label { font-size: 12px; font-weight: 600; color: #374151; }
+.adm-field input, .adm-field textarea, .adm-field select {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.15s;
+  font-family: inherit;
+  resize: vertical;
+}
+.adm-field input:focus, .adm-field textarea:focus, .adm-field select:focus { border-color: #dc2626; }
+.adm-field input.error, .adm-field textarea.error { border-color: #ef4444; }
+.adm-field-error { font-size: 11px; color: #ef4444; }
+
+.adm-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .adm-field-row { grid-template-columns: 1fr; } }
+
+.adm-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+}
+.adm-checkbox-label input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: #dc2626; }
+
+.adm-ing-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.adm-ing-row input {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12px;
+  outline: none;
+  font-family: inherit;
+}
+.adm-ing-row input:focus { border-color: #dc2626; }
+
+.adm-step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.adm-step-num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  background: #dc2626;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  margin-top: 8px;
+}
+.adm-step-row textarea {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12px;
+  outline: none;
+  font-family: inherit;
+  resize: vertical;
+}
+.adm-step-row textarea:focus { border-color: #dc2626; }
+
+.adm-btn-sm {
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 7px;
+}
+
+/* ── Admin table reuse ─────────────────────────────────────── */
+.adm-badge-success { background: #dcfce7; color: #166534; }
+.adm-badge-warning { background: #fef9c3; color: #854d0e; }
+
+.adm-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #9ca3af;
+}
+.adm-empty svg { margin-bottom: 12px; }
+.adm-empty p { font-size: 14px; }
+.adm-empty a { color: #dc2626; }

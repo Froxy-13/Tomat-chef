@@ -176,7 +176,7 @@ function RegisterForm() {
         {loading ? 'Création…' : 'Créer mon compte'}
       </button>
       <p className="auth-terms">
-        En créant un compte vous acceptez nos <a href="#">conditions d'utilisation</a>.
+        En créant un compte vous acceptez nos <Link to="/confidentialite" target="_blank" rel="noopener noreferrer">conditions d'utilisation</Link> et notre <Link to="/confidentialite" target="_blank" rel="noopener noreferrer">politique de confidentialité</Link>.
       </p>
     </form>
   )

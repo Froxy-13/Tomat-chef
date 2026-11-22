@@ -8,6 +8,8 @@ import { BADGE_MAP, getMeta, fmt } from '../data/products'
 import { useCart } from '../context/CartContext'
 import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
+import RecipesBlogSection from '../components/RecipesBlogSection'
+import LoyaltySection from '../components/LoyaltySection'
 import '../styles/globals.css'
 import '../styles/home.css'
 
@@ -249,6 +251,14 @@ export default function HomePage() {
           {toasts.map(t => <Toast key={t.id} product={t.product} />)}
         </AnimatePresence>
       </div>
+
+      {/* ── Recettes Blog Section ── */}
+      <RecipesBlogSection
+        signatureProduct={enriched.find(p => p.slug === 'bouteille-signature-750g') ?? enriched[0]}
+      />
+
+      {/* ── Programme de fidélité ── */}
+      <LoyaltySection />
     </>
   )
 }

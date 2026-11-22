@@ -49,9 +49,46 @@
   position: absolute; top: 16px; left: 16px; z-index: 2;
 }
 .pd-icon-wrap {
-  position: relative; z-index: 1;
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.pd-icon-wrap .product-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.pd-icon-wrap svg {
   filter: drop-shadow(0 16px 32px rgba(69,10,10,.18));
 }
+/* ── Slideshow ── */
+.pd-slide { position: absolute; inset: 0; transition: opacity .4s ease; }
+.pd-slide.active { opacity: 1; z-index: 1; }
+.pd-slide.inactive { opacity: 0; z-index: 0; }
+.pd-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.pd-slide-dots {
+  position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; z-index: 3;
+}
+.pd-slide-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.5); border: none; cursor: pointer; padding: 0;
+  transition: background 200ms, transform 200ms;
+}
+.pd-slide-dot.active { background: #fff; transform: scale(1.3); }
+
+.pd-slide-arrows {
+  position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 10px; z-index: 3; pointer-events: none;
+}
+.pd-slide-arrow {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.75); backdrop-filter: blur(4px);
+  border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--fg); pointer-events: auto; transition: background 150ms;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.pd-slide-arrow:hover { background: rgba(255,255,255,.95); }
+
 .pd-deco-ring {
   position: absolute; border-radius: 50%;
   border: 1.5px solid rgba(220,38,38,.1);
@@ -59,7 +96,7 @@
 .ring-outer { width: 320px; height: 320px; }
 .ring-inner { width: 220px; height: 220px; }
 .pd-visual-chips {
-  position: absolute; bottom: 16px;
+  position: absolute; bottom: 16px; z-index: 2;
   display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
   padding: 0 16px;
 }
@@ -181,9 +218,15 @@
 }
 .pd-related-card:hover { border-color: var(--tomato-light); box-shadow: var(--sh-md); }
 .pd-related-img {
-  height: 120px; display: flex; align-items: center;
+  height: 160px; display: flex; align-items: center;
   justify-content: center; position: relative;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,.1));
+  overflow: hidden;
+}
+.pd-related-img .product-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
 }
 .pd-related-badge { position: absolute; top: 8px; right: 8px; }
 .pd-related-body { background: var(--bg-card); padding: 12px 14px; }

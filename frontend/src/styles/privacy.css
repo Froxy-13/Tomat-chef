@@ -1,0 +1,136 @@
+/* ── Header ── */
+.prv-header {
+  background: var(--tomato);
+  padding: 0;
+  position: sticky; top: 0; z-index: 50;
+}
+.prv-header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: var(--nav-h);
+}
+.prv-logo {
+  display: flex; align-items: center; gap: 8px;
+  color: #fff; font-family: var(--font-head); font-weight: 700; font-size: 1.1rem;
+  text-decoration: none;
+}
+.prv-header .btn-outline {
+  border-color: rgba(255,255,255,.4); color: #fff;
+  font-size: .82rem;
+}
+.prv-header .btn-outline:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.7); }
+
+/* ── Main layout ── */
+.prv-main { padding: 48px 0 80px; min-height: calc(100svh - var(--nav-h)); }
+
+.prv-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (max-width: 860px) { .prv-layout { grid-template-columns: 1fr; } }
+
+/* ── TOC ── */
+.prv-toc {
+  position: sticky; top: calc(var(--nav-h) + 24px);
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-xl); padding: 20px;
+  box-shadow: var(--sh-sm);
+}
+@media (max-width: 860px) { .prv-toc { position: static; } }
+.prv-toc-title {
+  font-size: .68rem; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--fg-muted);
+  margin-bottom: 12px;
+}
+.prv-toc-link {
+  display: block;
+  font-size: .82rem; font-weight: 500; color: var(--fg-mid);
+  padding: 5px 8px; border-radius: var(--r-sm);
+  text-decoration: none;
+  transition: background 150ms, color 150ms;
+}
+.prv-toc-link:hover { background: var(--bg-muted); color: var(--tomato); }
+
+/* ── Content ── */
+.prv-content { max-width: 740px; }
+
+.prv-hero {
+  display: flex; align-items: flex-start; gap: 16px;
+  margin-bottom: 28px;
+}
+.prv-hero-icon {
+  width: 52px; height: 52px; flex-shrink: 0;
+  background: var(--tomato-tint); border-radius: var(--r-lg);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--tomato);
+}
+.prv-hero-icon-alt {
+  width: 44px; height: 44px;
+  background: rgba(59,130,246,.1); color: #2563EB;
+}
+.prv-title {
+  font-family: var(--font-head); font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 700; color: var(--fg); line-height: 1.2;
+}
+.prv-title-alt { font-size: clamp(1.1rem, 2.5vw, 1.4rem); }
+.prv-meta { font-size: .78rem; color: var(--fg-muted); margin-top: 4px; }
+
+.prv-intro {
+  font-size: .92rem; line-height: 1.7; color: var(--fg-mid);
+  background: var(--bg-muted); border-left: 3px solid var(--tomato);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 14px 18px; margin-bottom: 32px;
+}
+
+/* ── Sections ── */
+.prv-section { margin-bottom: 32px; }
+.prv-section-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px;
+}
+
+.prv-h2 {
+  font-family: var(--font-head); font-size: 1.05rem; font-weight: 700;
+  color: var(--fg); margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 1.5px solid var(--border-light);
+}
+
+.prv-section p {
+  font-size: .88rem; line-height: 1.72; color: var(--fg-mid);
+  margin-bottom: 10px;
+}
+.prv-section a { color: var(--tomato); font-weight: 600; }
+.prv-section a:hover { text-decoration: underline; }
+
+.prv-list {
+  list-style: none; padding: 0; margin: 0 0 10px;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.prv-list li {
+  font-size: .87rem; line-height: 1.65; color: var(--fg-mid);
+  padding-left: 18px; position: relative;
+}
+.prv-list li::before {
+  content: '•'; position: absolute; left: 4px;
+  color: var(--tomato); font-size: .9rem;
+}
+
+.prv-contact-box {
+  background: var(--bg-muted); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 14px 18px;
+  display: flex; flex-direction: column; gap: 6px;
+  font-size: .87rem; color: var(--fg-mid);
+}
+
+.prv-divider {
+  height: 2px; background: var(--border);
+  margin: 40px 0;
+}
+
+.prv-footer-note {
+  margin-top: 40px; padding: 16px 20px;
+  background: var(--bg-muted); border-radius: var(--r-lg);
+  font-size: .78rem; color: var(--fg-muted); text-align: center;
+  border: 1px solid var(--border-light);
+}

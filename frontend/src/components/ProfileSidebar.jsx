@@ -1,11 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { User, MapPin, Package, LogOut } from 'lucide-react'
+import { User, MapPin, Package, LogOut, Award } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const NAV_ITEMS = [
-  { to: '/profil',          label: 'Mon profil',    icon: User },
-  { to: '/profil/adresses', label: 'Mes adresses',  icon: MapPin },
-  { to: '/mes-commandes',   label: 'Mes commandes', icon: Package },
+  { to: '/profil',           label: 'Mon profil',    icon: User },
+  { to: '/profil/adresses',  label: 'Mes adresses',  icon: MapPin },
+  { to: '/mes-commandes',    label: 'Mes commandes', icon: Package },
+  { to: '/profil/fidelite',  label: 'Fidélité',      icon: Award },
 ]
 
 function initials(name = '') {

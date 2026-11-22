@@ -68,6 +68,11 @@ class Order extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
+
     public function isPaid(): bool
     {
         return in_array($this->status, [

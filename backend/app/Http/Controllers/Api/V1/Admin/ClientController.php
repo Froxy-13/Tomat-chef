@@ -48,6 +48,15 @@ class ClientController extends Controller
         ]);
     }
 
+    public function destroy(int $id): JsonResponse
+    {
+        $client = User::where('id', $id)->where('role', 'client')->firstOrFail();
+        $client->tokens()->delete();
+        $client->delete();
+
+        return response()->json(['message' => 'Compte supprimé.']);
+    }
+
     public function toggle(int $id): JsonResponse
     {
         $client = User::where('id', $id)->where('role', 'client')->firstOrFail();

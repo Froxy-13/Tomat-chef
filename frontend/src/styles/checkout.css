@@ -93,7 +93,15 @@
 .co-sum-title  { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; color: var(--fg); }
 .co-sum-items  { display: flex; flex-direction: column; gap: 10px; }
 .co-sum-item   { display: flex; align-items: center; gap: 10px; }
-.co-sum-icon   { flex-shrink: 0; }
+.co-sum-icon {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-muted);
+}
+.co-sum-icon .product-img { width: 100%; height: 100%; object-fit: cover; }
 .co-sum-info   { flex: 1; min-width: 0; }
 .co-sum-name   { font-size: .82rem; font-weight: 600; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .co-sum-vol    { font-size: .72rem; color: var(--fg-muted); }

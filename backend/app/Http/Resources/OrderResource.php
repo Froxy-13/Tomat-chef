@@ -32,9 +32,19 @@ class OrderResource extends JsonResource
                 $this->statusHistories->map(fn ($h) => [
                     'status'     => $h->status,
                     'note'       => $h->note,
+                    'author'     => $h->relationLoaded('author') && $h->author
+                                        ? trim($h->author->first_name . ' ' . $h->author->last_name)
+                                        : null,
                     'created_at' => $h->created_at->toDateTimeString(),
                 ])
             ),
+            'user'          => $this->whenLoaded('user', fn () => [
+                'id'         => $this->user->id,
+                'first_name' => $this->user->first_name,
+                'last_name'  => $this->user->last_name,
+                'email'      => $this->user->email,
+                'phone'      => $this->user->phone,
+            ]),
             'expires_at'    => $this->expires_at?->toDateTimeString(),
             'created_at'    => $this->created_at->toDateTimeString(),
         ];

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, Plus, Minus, ShoppingBag, ArrowLeft, CheckCircle, Package, Leaf, Clock, Shield, MapPin } from 'lucide-react'
+import { ChevronRight, Plus, Minus, ShoppingBag, ArrowLeft, CheckCircle, Package, Leaf, Clock, Shield, MapPin, ChevronLeft } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import ProductImage from '../components/ProductImage'
 import { getMeta, BADGE_MAP, fmt } from '../data/products'
@@ -28,13 +28,27 @@ export default function ProductDetailPage() {
   const [notFound, setNotFound] = useState(false)
   const [qty, setQty]  = useState(1)
   const [added, setAdded] = useState(false)
+  const [slideIdx, setSlideIdx] = useState(0)
+  const slideTimer = useRef(null)
+
+  const startSlide = useCallback((images) => {
+    if (!images || images.length <= 1) return
+    clearInterval(slideTimer.current)
+    slideTimer.current = setInterval(() => {
+      setSlideIdx(i => (i + 1) % images.length)
+    }, 3000)
+  }, [])
+
+  useEffect(() => () => clearInterval(slideTimer.current), [])
 
   useEffect(() => {
-    setLoading(true); setNotFound(false)
+    setLoading(true); setNotFound(false); setSlideIdx(0); clearInterval(slideTimer.current)
     api.get(`/products/${slug}`)
       .then(res => {
         const p = res.data ?? res
-        setProduct({ ...p, ...getMeta(p.slug) })
+        const full = { ...p, ...getMeta(p.slug) }
+        setProduct(full)
+        startSlide(full.images)
         return api.get('/products?per_page=4')
       })
       .then(res => {
@@ -58,7 +72,7 @@ export default function ProductDetailPage() {
     <>
       <Navbar currentPage="boutique" />
       <div className="pd-not-found">
-        <TomatoIcon size={64} color="var(--border)" />
+        <Package size={64} strokeWidth={1.5} color="var(--border)" />
         <h1>Produit introuvable</h1>
         <Link to="/home" className="btn btn-primary">Retour à la boutique</Link>
       </div>
@@ -104,23 +118,50 @@ export default function ProductDetailPage() {
               {badge && (
                 <span className={`badge ${badge.cls} pd-visual-badge`}>{badge.label}</span>
               )}
-              <motion.div
-                className="pd-icon-wrap"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <ProductImage
-                  images={product.images}
-                  slug={product.slug}
-                  iconType={product.iconType}
-                  size={160}
-                  alt={product.name}
-                />
-              </motion.div>
 
-              {/* Cercles déco */}
-              <div className="pd-deco-ring ring-outer" aria-hidden="true" />
-              <div className="pd-deco-ring ring-inner" aria-hidden="true" />
+              {/* ── Image / Slideshow ── */}
+              {product.images?.length > 0 ? (
+                <>
+                  {product.images.map((img, i) => (
+                    <div key={img.id} className={`pd-slide ${i === slideIdx ? 'active' : 'inactive'}`}>
+                      <img src={img.url} alt={`${product.name} ${i + 1}`} loading={i === 0 ? 'eager' : 'lazy'} />
+                    </div>
+                  ))}
+                  {product.images.length > 1 && (
+                    <>
+                      <div className="pd-slide-arrows" aria-hidden="true">
+                        <button className="pd-slide-arrow" onClick={() => { setSlideIdx(i => (i - 1 + product.images.length) % product.images.length); startSlide(product.images) }}>
+                          <ChevronLeft size={16} />
+                        </button>
+                        <button className="pd-slide-arrow" onClick={() => { setSlideIdx(i => (i + 1) % product.images.length); startSlide(product.images) }}>
+                          <ChevronRight size={16} />
+                        </button>
+                      </div>
+                      <div className="pd-slide-dots">
+                        {product.images.map((_, i) => (
+                          <button key={i} className={`pd-slide-dot ${i === slideIdx ? 'active' : ''}`} onClick={() => { setSlideIdx(i); startSlide(product.images) }} aria-label={`Image ${i + 1}`} />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <motion.div
+                  className="pd-icon-wrap"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ProductImage images={[]} iconType={product.iconType} size={160} alt={product.name} />
+                </motion.div>
+              )}
+
+              {/* Cercles déco (only behind icon fallback) */}
+              {(!product.images?.length) && (
+                <>
+                  <div className="pd-deco-ring ring-outer" aria-hidden="true" />
+                  <div className="pd-deco-ring ring-inner" aria-hidden="true" />
+                </>
+              )}
 
               {/* Spec chips */}
               <div className="pd-visual-chips">

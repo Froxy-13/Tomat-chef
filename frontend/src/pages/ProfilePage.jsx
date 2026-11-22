@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User, Eye, EyeOff, CheckCircle, Lock, AlertCircle, Trash2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
@@ -10,7 +11,8 @@ import '../styles/profile.css'
 import '../styles/orders.css'
 
 export default function ProfilePage() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
 
   const [form, setForm] = useState({
     firstName: user?.first_name ?? user?.name?.split(' ')[0] ?? '',
@@ -26,6 +28,8 @@ export default function ProfilePage() {
   const [saved, setSaved]           = useState(false)
   const [savedPwd, setSavedPwd]     = useState(false)
   const [pwdErrors, setPwdErrors]   = useState({})
+  const [deleting, setDeleting]     = useState(false)
+
 
   const setF = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }))
   const setP = (k) => (e) => setPwdForm(p => ({ ...p, [k]: e.target.value }))
@@ -218,6 +222,7 @@ export default function ProfilePage() {
                 </AnimatePresence>
               </motion.div>
 
+
               {/* ── Zone danger ── */}
               <motion.div
                 className="prf-card prf-danger"
@@ -233,8 +238,24 @@ export default function ProfilePage() {
                 <button
                   className="btn btn-outline btn-sm"
                   style={{ borderColor: 'var(--tomato)', color: 'var(--tomato)', alignSelf: 'flex-start' }}
+                  disabled={deleting}
+                  onClick={async () => {
+                    if (!window.confirm('Supprimer définitivement votre compte ? Cette action est irréversible.')) return
+                    setDeleting(true)
+                    try {
+                      await api.delete('/profile')
+                      await logout()
+                      navigate('/', { replace: true })
+                    } catch {
+                      setDeleting(false)
+                    }
+                  }}
                 >
-                  <Trash2 size={14} /> Supprimer mon compte
+                  {deleting
+                    ? <span className="spinner" style={{ width: 14, height: 14, borderTopColor: 'var(--tomato)' }} />
+                    : <Trash2 size={14} />
+                  }
+                  {deleting ? 'Suppression…' : 'Supprimer mon compte'}
                 </button>
               </motion.div>
 

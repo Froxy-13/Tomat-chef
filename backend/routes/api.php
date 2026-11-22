@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/products', [\App\Http\Controllers\Api\V1\ProductController::class, 'index']);
 Route::get('/products/{slug}', [\App\Http\Controllers\Api\V1\ProductController::class, 'show']);
 
+// Avis clients (publics)
+Route::get('/reviews', [\App\Http\Controllers\Api\V1\ReviewController::class, 'index']);
+
+// Recettes (publiques)
+Route::get('/recipes', [\App\Http\Controllers\Api\V1\RecipeController::class, 'index']);
+Route::get('/recipes/{slug}', [\App\Http\Controllers\Api\V1\RecipeController::class, 'show']);
+
 // Authentification client
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -60,6 +67,13 @@ Route::middleware(['auth:sanctum', 'role:client'])->group(function () {
 
     // Paiement
     Route::post('/orders/{number}/pay', [\App\Http\Controllers\Api\V1\PaymentController::class, 'pay']);
+
+    // Avis
+    Route::post('/orders/{number}/review', [\App\Http\Controllers\Api\V1\ReviewController::class, 'store']);
+
+    // Fidélité
+    Route::get('/loyalty',         [\App\Http\Controllers\Api\V1\LoyaltyController::class, 'status']);
+    Route::post('/loyalty/redeem', [\App\Http\Controllers\Api\V1\LoyaltyController::class, 'redeem']);
 });
 
 /*
@@ -72,6 +86,9 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::post('/auth/logout', [Admin\AuthController::class, 'logout']);
     Route::get('/me', [Admin\AuthController::class, 'me']);
 
+    // Dashboard
+    Route::get('/dashboard', [Admin\DashboardController::class, 'index']);
+
     // Produits
     Route::apiResource('products', Admin\ProductController::class);
     Route::post('products/{id}/images', [Admin\ProductController::class, 'uploadImage']);
@@ -81,6 +98,7 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::get('/clients', [Admin\ClientController::class, 'index']);
     Route::get('/clients/{id}', [Admin\ClientController::class, 'show']);
     Route::put('/clients/{id}/toggle', [Admin\ClientController::class, 'toggle']);
+    Route::delete('/clients/{id}', [Admin\ClientController::class, 'destroy']);
 
     // Zones de livraison
     Route::apiResource('delivery-zones', Admin\DeliveryZoneController::class);
@@ -89,6 +107,9 @@ Route::prefix('admin')->middleware(['auth:sanctum', 'role:admin'])->group(functi
     Route::get('/orders', [Admin\OrderController::class, 'index']);
     Route::get('/orders/{number}', [Admin\OrderController::class, 'show']);
     Route::put('/orders/{number}/status', [Admin\OrderController::class, 'updateStatus']);
+
+    // Recettes
+    Route::apiResource('recipes', Admin\RecipeController::class);
 });
 
 // Connexion admin (sans auth)

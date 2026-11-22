@@ -3,14 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Phone, Home, ArrowRight, Package, AlertCircle, Plus, CheckCircle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
-import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
 import { getMeta, fmt } from '../data/products'
+import ProductImage from '../components/ProductImage'
 import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/checkout.css'
-
-const ICON_MAP = { tomato: TomatoIcon, jar: JarIcon, box: BoxIcon }
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
@@ -241,11 +239,18 @@ export default function CheckoutPage() {
 
                   <div className="co-sum-items">
                     {items.map(({ product, quantity }) => {
-                      const meta = getMeta(product.slug)
-                      const Icon = ICON_MAP[meta.iconType] ?? TomatoIcon
+                      const meta = getMeta(product.slug) ?? {}
                       return (
                         <div key={product.id} className="co-sum-item">
-                          <div className="co-sum-icon"><Icon size={36} /></div>
+                          <div className="co-sum-icon">
+                            <ProductImage
+                              images={product.images}
+                              slug={product.slug}
+                              iconType={meta.iconType}
+                              size={36}
+                              alt={product.name}
+                            />
+                          </div>
                           <div className="co-sum-info">
                             <div className="co-sum-name">{product.name}</div>
                             <div className="co-sum-vol">{meta.volume}</div>
