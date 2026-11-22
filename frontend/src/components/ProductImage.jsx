@@ -20,8 +20,8 @@ export default function ProductImage({ images, slug, iconType, size = 72, classN
   const primary = images?.find(i => i.is_primary) ?? images?.[0]
   const apiUrl  = primary?.url ?? null
 
-  // Priorité 2 : fichier local
-  const localUrl = slug ? `/images/${slug}.jpg` : null
+  // Priorité 2 : fichier local (essaie .jpeg puis .jpg via onError)
+  const localUrl = slug ? `/images/${slug}.jpeg` : null
 
   const imgUrl = apiUrl ?? localUrl
 
