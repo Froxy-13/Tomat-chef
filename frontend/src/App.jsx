@@ -8,6 +8,9 @@ import CartPage              from './pages/CartPage'
 import CheckoutPage          from './pages/CheckoutPage'
 import PaymentPage           from './pages/PaymentPage'
 import OrdersPage            from './pages/OrdersPage'
+import OrderDetailPage       from './pages/OrderDetailPage'
+import ProfilePage           from './pages/ProfilePage'
+import AddressesPage         from './pages/AddressesPage'
 
 export default function App() {
   return (
@@ -22,6 +25,9 @@ export default function App() {
           <Route path="/commande"                        element={<CheckoutPage />} />
           <Route path="/commande/:number/paiement"       element={<PaymentPage />} />
           <Route path="/mes-commandes"                   element={<OrdersPage />} />
+          <Route path="/mes-commandes/:number"           element={<OrderDetailPage />} />
+          <Route path="/profil"                          element={<ProfilePage />} />
+          <Route path="/profil/adresses"                 element={<AddressesPage />} />
           <Route path="*"                                element={<Navigate to="/" replace />} />
         </Routes>
       </CartProvider>

@@ -1,0 +1,96 @@
+/* ── Main ── */
+.prf-main { padding: 40px 0 80px; min-height: calc(100svh - var(--nav-h)); }
+
+/* ── Layout ── */
+.prf-layout {
+  display: grid; grid-template-columns: 260px 1fr;
+  gap: 28px; align-items: start;
+}
+@media (max-width: 860px) { .prf-layout { grid-template-columns: 1fr; } }
+
+/* ── Sidebar ── */
+.prf-sidebar {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-xl); overflow: hidden;
+  box-shadow: var(--sh-sm); position: sticky;
+  top: calc(var(--nav-h) + 20px);
+}
+.prf-sidebar-head {
+  background: linear-gradient(135deg, var(--tomato), #991B1B);
+  padding: 28px 20px; display: flex; flex-direction: column;
+  align-items: center; gap: 10px; text-align: center;
+}
+.prf-avatar {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(255,255,255,.2); border: 3px solid rgba(255,255,255,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head); font-size: 1.8rem; font-weight: 800;
+  color: #fff;
+}
+.prf-sidebar-name  { font-family: var(--font-head); font-weight: 700; font-size: 1rem; color: #fff; }
+.prf-sidebar-email { font-size: .75rem; color: rgba(255,255,255,.75); }
+
+.prf-nav { display: flex; flex-direction: column; padding: 8px; }
+.prf-nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-radius: var(--r-lg);
+  font-size: .85rem; font-weight: 600; color: var(--fg-mid);
+  text-decoration: none; transition: background 150ms ease, color 150ms ease;
+}
+.prf-nav-item:hover  { background: var(--bg-muted); color: var(--fg); }
+.prf-nav-item.active { background: var(--tomato-tint); color: var(--tomato); }
+.prf-nav-item svg    { flex-shrink: 0; }
+.prf-nav-divider     { height: 1px; background: var(--border); margin: 6px 8px; }
+
+/* ── Card ── */
+.prf-card {
+  background: var(--bg-card); border: 1.5px solid var(--border);
+  border-radius: var(--r-xl); padding: 28px;
+  box-shadow: var(--sh-sm);
+}
+.prf-card + .prf-card { margin-top: 20px; }
+.prf-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.prf-card-title {
+  font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; color: var(--fg);
+  display: flex; align-items: center; gap: 8px;
+}
+.prf-card-title svg { color: var(--tomato); }
+
+/* ── Champs ── */
+.prf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 540px) { .prf-row { grid-template-columns: 1fr; } }
+.prf-field { display: flex; flex-direction: column; gap: 6px; }
+.prf-label {
+  font-size: .78rem; font-weight: 700; color: var(--fg-mid);
+  letter-spacing: .04em; text-transform: uppercase;
+}
+
+/* ── Password toggle ── */
+.prf-pwd-toggle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .82rem; font-weight: 600; color: var(--tomato);
+  background: none; border: none; cursor: pointer; padding: 0;
+  transition: opacity 150ms ease;
+}
+.prf-pwd-toggle:hover { opacity: .75; }
+
+/* ── Save bar ── */
+.prf-save-bar {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 12px; margin-top: 24px; padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.prf-success-msg {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .82rem; font-weight: 600; color: #16A34A;
+}
+
+/* ── Danger zone ── */
+.prf-danger {
+  border-color: rgba(220,38,38,.25);
+}
+.prf-danger .prf-card-title { color: var(--tomato); }
+.prf-danger-text { font-size: .85rem; color: var(--fg-mid); line-height: 1.6; margin-bottom: 16px; }
