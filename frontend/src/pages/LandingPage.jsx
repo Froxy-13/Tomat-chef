@@ -5,6 +5,7 @@ import {
   ShoppingBag, Truck, Shield, Star, ChevronRight,
   MapPin, Clock, Leaf, ArrowRight, Menu, X
 } from 'lucide-react'
+import { TomatoIcon } from '../components/TomatoIcon'
 import ProductImage from '../components/ProductImage'
 import '../styles/globals.css'
 import '../styles/landing.css'
