@@ -1,22 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, Package, MapPin, Phone, User, Truck, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react'
-import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
+import { motion } from 'framer-motion'
+import { ChevronLeft, Package, MapPin, Phone, Truck, CheckCircle, Clock, XCircle, AlertTriangle, ShoppingBag } from 'lucide-react'
 import { fmt } from '../data/products'
+import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/order-detail.css'
 
-const ICON_MAP = { tomato: TomatoIcon, jar: JarIcon, box: BoxIcon }
-
 const STATUS_LABEL = {
-  received:  'Reçue',
-  confirmed: 'Confirmée',
-  preparing: 'En préparation',
-  shipped:   'Expédiée',
-  delivered: 'Livrée',
-  cancelled: 'Annulée',
+  pending_payment: 'En attente de paiement',
+  received:        'Reçue',
+  confirmed:       'Confirmée',
+  preparing:       'En préparation',
+  shipped:         'Expédiée',
+  delivered:       'Livrée',
+  cancelled:       'Annulée',
 }
 
 const STATUS_STEPS = ['received', 'confirmed', 'preparing', 'shipped', 'delivered']
@@ -28,62 +27,13 @@ const STEP_ICONS = {
   delivered: CheckCircle,
 }
 
-/* ── Mock data (même que OrdersPage) ── */
-const MOCK_ORDERS = [
-  {
-    number: 'TC-261122-4871',
-    date: '2026-11-22',
-    status: 'received',
-    deliveryZone: 'Dakar Centre',
-    deliveryFee: 1000,
-    address: { name: 'Fatimata Diallo', phone: '77 123 45 67', address: '12 Avenue Cheikh Anta Diop', city: 'Dakar', quartier: 'Plateau' },
-    items: [
-      { id: 2, name: 'Double concentré', volume: '400g', format: 'Boîte métal', iconType: 'jar', price: 1200, quantity: 2 },
-      { id: 1, name: 'Double concentré', volume: '70g',  format: 'Sachet',      iconType: 'tomato', price: 300, quantity: 3 },
-    ],
-  },
-  {
-    number: 'TC-261115-2345',
-    date: '2026-11-15',
-    status: 'delivered',
-    deliveryZone: 'Dakar Banlieue',
-    deliveryFee: 1500,
-    address: { name: 'Fatimata Diallo', phone: '77 123 45 67', address: '12 Avenue Cheikh Anta Diop', city: 'Dakar', quartier: 'Plateau' },
-    items: [
-      { id: 6, name: 'Pack famille', volume: '6 × 400g', format: 'Économique', iconType: 'box', price: 6000, quantity: 1 },
-    ],
-  },
-  {
-    number: 'TC-261108-7892',
-    date: '2026-11-08',
-    status: 'cancelled',
-    deliveryZone: 'Régions',
-    deliveryFee: 3000,
-    address: { name: 'Fatimata Diallo', phone: '77 123 45 67', address: '12 Avenue Cheikh Anta Diop', city: 'Dakar', quartier: 'Plateau' },
-    items: [
-      { id: 4, name: 'Triple concentré', volume: '400g', format: 'Premium',     iconType: 'tomato', price: 1800, quantity: 1 },
-      { id: 5, name: 'Double concentré', volume: '200g', format: 'Bocal verre', iconType: 'jar',    price: 750,  quantity: 2 },
-    ],
-  },
-  {
-    number: 'TC-261102-1133',
-    date: '2026-11-02',
-    status: 'shipped',
-    deliveryZone: 'Dakar Centre',
-    deliveryFee: 1000,
-    address: { name: 'Fatimata Diallo', phone: '77 123 45 67', address: '12 Avenue Cheikh Anta Diop', city: 'Dakar', quartier: 'Plateau' },
-    items: [
-      { id: 3, name: 'Double concentré', volume: '2,2kg', format: 'Grand format', iconType: 'box', price: 5500, quantity: 1 },
-    ],
-  },
-]
-
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('fr-SN', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
 function stepState(step, currentStatus) {
-  if (currentStatus === 'cancelled') return step === 'received' ? 'done' : 'cancelled'
+  if (currentStatus === 'cancelled' || currentStatus === 'pending_payment')
+    return step === 'received' ? 'pending' : 'pending'
   const currentIdx = STATUS_STEPS.indexOf(currentStatus)
   const stepIdx    = STATUS_STEPS.indexOf(step)
   if (stepIdx < currentIdx)  return 'done'
@@ -92,37 +42,64 @@ function stepState(step, currentStatus) {
 }
 
 export default function OrderDetailPage() {
-  const { number }  = useParams()
-  const navigate    = useNavigate()
+  const { number } = useParams()
+  const navigate   = useNavigate()
+
+  const [order, setOrder]         = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [notFound, setNotFound]   = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [cancelled, setCancelled]   = useState(false)
 
-  const order = MOCK_ORDERS.find(o => o.number === number)
+  useEffect(() => {
+    api.get(`/orders/${number}`)
+      .then(res => setOrder(res.data ?? res))
+      .catch(err => { if (err.status === 404) setNotFound(true) })
+      .finally(() => setLoading(false))
+  }, [number])
 
-  if (!order) {
-    return (
-      <>
-        <Navbar currentPage="commandes" />
-        <main className="od-main"><div className="page-container">
-          <div style={{ textAlign: 'center', padding: '80px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-            <Package size={56} strokeWidth={1.5} color="var(--border)" />
-            <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.3rem', color: 'var(--fg)' }}>Commande introuvable</h1>
-            <Link to="/mes-commandes" className="btn btn-primary">Retour aux commandes</Link>
-          </div>
-        </div></main>
-      </>
-    )
-  }
+  if (loading) return (
+    <>
+      <Navbar currentPage="commandes" />
+      <div style={{ display: 'flex', justifyContent: 'center', padding: 80 }}>
+        <span className="spinner" style={{ width: 36, height: 36, borderTopColor: 'var(--tomato)' }} />
+      </div>
+    </>
+  )
+
+  if (notFound || !order) return (
+    <>
+      <Navbar currentPage="commandes" />
+      <main className="od-main"><div className="page-container">
+        <div style={{ textAlign: 'center', padding: '80px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+          <Package size={56} strokeWidth={1.5} color="var(--border)" />
+          <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.3rem', color: 'var(--fg)' }}>Commande introuvable</h1>
+          <Link to="/mes-commandes" className="btn btn-primary">Retour aux commandes</Link>
+        </div>
+      </div></main>
+    </>
+  )
 
   const currentStatus = cancelled ? 'cancelled' : order.status
-  const subtotal = order.items.reduce((s, i) => s + i.price * i.quantity, 0)
-  const total    = subtotal + order.deliveryFee
-  const canCancel = currentStatus === 'received'
+  const canCancel = currentStatus === 'pending_payment' || currentStatus === 'received'
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     setCancelling(true)
-    setTimeout(() => { setCancelling(false); setCancelled(true) }, 800)
+    try {
+      await api.put(`/orders/${number}/cancel`, {})
+      setCancelled(true)
+      setOrder(o => ({ ...o, status: 'cancelled' }))
+    } catch {
+      // If no cancel endpoint, optimistic local only
+      setCancelled(true)
+    } finally {
+      setCancelling(false)
+    }
   }
+
+  const address = order.address ?? {}
+  const items   = order.items ?? []
+  const zone    = order.delivery_zone ?? {}
 
   return (
     <>
@@ -139,11 +116,11 @@ export default function OrderDetailPage() {
           <div className="od-header">
             <div className="od-header-left">
               <h1 className="od-number">{order.number}</h1>
-              <div className="od-date">Passée le {formatDate(order.date)}</div>
+              <div className="od-date">Passée le {formatDate(order.created_at)}</div>
             </div>
             <div className={`ord-status ${currentStatus}`} style={{ alignSelf: 'flex-start' }}>
               <span className="ord-status-dot" />
-              {STATUS_LABEL[currentStatus]}
+              {STATUS_LABEL[currentStatus] ?? currentStatus}
             </div>
           </div>
 
@@ -160,8 +137,13 @@ export default function OrderDetailPage() {
                   <div className="od-step-dot"><XCircle size={16} /></div>
                   <div className="od-step-label">Annulée</div>
                 </div>
+              ) : currentStatus === 'pending_payment' ? (
+                <div className="od-step active" role="listitem" style={{ flex: 'none' }}>
+                  <div className="od-step-dot"><Clock size={16} /></div>
+                  <div className="od-step-label">Paiement en attente</div>
+                </div>
               ) : STATUS_STEPS.map(step => {
-                const state   = stepState(step, currentStatus)
+                const state    = stepState(step, currentStatus)
                 const StepIcon = STEP_ICONS[step]
                 return (
                   <div key={step} className={`od-step ${state}`} role="listitem">
@@ -187,22 +169,20 @@ export default function OrderDetailPage() {
               >
                 <div className="od-card-title"><Package size={18} /> Articles commandés</div>
                 <div className="od-items">
-                  {order.items.map(item => {
-                    const Icon = ICON_MAP[item.iconType] ?? TomatoIcon
-                    return (
-                      <div key={item.id} className="od-item">
-                        <div className="od-item-icon"><Icon size={48} /></div>
-                        <div className="od-item-info">
-                          <div className="od-item-name">{item.name}</div>
-                          <div className="od-item-vol">{item.volume} · {item.format}</div>
-                        </div>
-                        <div className="od-item-right">
-                          <div className="od-item-qty">×{item.quantity}</div>
-                          <div className="od-item-price">{fmt(item.price * item.quantity)}</div>
-                        </div>
+                  {items.map((item, i) => (
+                    <div key={i} className="od-item">
+                      <div className="od-item-icon">
+                        <Package size={36} color="var(--tomato)" />
                       </div>
-                    )
-                  })}
+                      <div className="od-item-info">
+                        <div className="od-item-name">{item.product_name}</div>
+                      </div>
+                      <div className="od-item-right">
+                        <div className="od-item-qty">×{item.quantity}</div>
+                        <div className="od-item-price">{fmt(item.unit_price * item.quantity)}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </motion.div>
 
@@ -215,26 +195,21 @@ export default function OrderDetailPage() {
                 <div className="od-card-title"><Truck size={18} /> Informations de livraison</div>
                 <div className="od-delivery-rows">
                   <div className="od-delivery-row">
-                    <User size={15} />
-                    <span className="od-delivery-label">Destinataire</span>
-                    <span className="od-delivery-val">{order.address.name}</span>
-                  </div>
-                  <div className="od-delivery-row">
                     <Phone size={15} />
                     <span className="od-delivery-label">Téléphone</span>
-                    <span className="od-delivery-val">{order.address.phone}</span>
+                    <span className="od-delivery-val">{address.phone}</span>
                   </div>
                   <div className="od-delivery-row">
                     <MapPin size={15} />
                     <span className="od-delivery-label">Adresse</span>
                     <span className="od-delivery-val">
-                      {order.address.address}{order.address.quartier ? `, ${order.address.quartier}` : ''}, {order.address.city}
+                      {address.neighborhood}{address.landmark ? ` — ${address.landmark}` : ''}, {address.city}
                     </span>
                   </div>
                   <div className="od-delivery-row">
                     <Truck size={15} />
                     <span className="od-delivery-label">Zone</span>
-                    <span className="od-delivery-val">{order.deliveryZone}</span>
+                    <span className="od-delivery-val">{zone.name}</span>
                   </div>
                 </div>
               </motion.div>
@@ -250,18 +225,18 @@ export default function OrderDetailPage() {
                 <div className="od-card-title">Récapitulatif</div>
                 <div className="od-sum-lines">
                   <div className="od-sum-line">
-                    <span>Sous-total ({order.items.reduce((s, i) => s + i.quantity, 0)} articles)</span>
-                    <span>{fmt(subtotal)}</span>
+                    <span>Sous-total ({items.reduce((s, it) => s + it.quantity, 0)} articles)</span>
+                    <span>{fmt(order.subtotal)}</span>
                   </div>
                   <div className="od-sum-line">
                     <span>Livraison</span>
-                    <span>{fmt(order.deliveryFee)}</span>
+                    <span>{fmt(order.delivery_fee)}</span>
                   </div>
                 </div>
                 <div className="od-divider" style={{ margin: '12px 0' }} />
                 <div className="od-sum-total">
                   <span>Total payé</span>
-                  <span className="od-sum-total-amt">{fmt(total)}</span>
+                  <span className="od-sum-total-amt">{fmt(order.total)}</span>
                 </div>
               </div>
 

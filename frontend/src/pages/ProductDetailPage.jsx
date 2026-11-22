@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronRight, Plus, Minus, ShoppingBag, ArrowLeft, CheckCircle, Package, Leaf, Clock, MapPin, Shield } from 'lucide-react'
+import { ChevronRight, Plus, Minus, ShoppingBag, ArrowLeft, CheckCircle, Package, Leaf, Clock, Shield, MapPin } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
-import { getProductBySlug, BADGE_MAP, fmt, PRODUCTS } from '../data/products'
+import { getMeta, BADGE_MAP, fmt } from '../data/products'
+import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/product-detail.css'
@@ -19,27 +20,55 @@ const SPECS = [
 ]
 
 export default function ProductDetailPage() {
-  const { slug } = useParams()
+  const { slug }  = useParams()
   const navigate  = useNavigate()
-  const { addItem, count } = useCart()
-  const product = getProductBySlug(slug)
+  const { addItem } = useCart()
 
-  const [qty, setQty]       = useState(1)
-  const [added, setAdded]   = useState(false)
+  const [product, setProduct] = useState(null)
+  const [related, setRelated] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
+  const [qty, setQty]  = useState(1)
+  const [added, setAdded] = useState(false)
 
-  if (!product) {
-    return (
+  useEffect(() => {
+    setLoading(true); setNotFound(false)
+    api.get(`/products/${slug}`)
+      .then(res => {
+        const p = res.data ?? res
+        setProduct({ ...p, ...getMeta(p.slug) })
+        return api.get('/products?per_page=4')
+      })
+      .then(res => {
+        const others = (res.data ?? []).filter(p => p.slug !== slug).slice(0, 3)
+        setRelated(others.map(p => ({ ...p, ...getMeta(p.slug) })))
+      })
+      .catch(err => { if (err.status === 404) setNotFound(true) })
+      .finally(() => setLoading(false))
+  }, [slug])
+
+  if (loading) return (
+    <>
+      <Navbar currentPage="boutique" />
+      <div style={{ display: 'flex', justifyContent: 'center', padding: 80 }}>
+        <span className="spinner" style={{ width: 36, height: 36, borderTopColor: 'var(--tomato)' }} />
+      </div>
+    </>
+  )
+
+  if (notFound || !product) return (
+    <>
+      <Navbar currentPage="boutique" />
       <div className="pd-not-found">
         <TomatoIcon size={64} color="var(--border)" />
         <h1>Produit introuvable</h1>
         <Link to="/home" className="btn btn-primary">Retour à la boutique</Link>
       </div>
-    )
-  }
+    </>
+  )
 
   const Icon  = ICON_MAP[product.iconType] ?? TomatoIcon
   const badge = product.badge ? BADGE_MAP[product.badge] : null
-  const related = PRODUCTS.filter(p => p.id !== product.id).slice(0, 3)
 
   const handleAdd = () => {
     addItem(product, qty)

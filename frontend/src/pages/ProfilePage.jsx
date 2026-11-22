@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User, Eye, EyeOff, CheckCircle, Lock, AlertCircle, Trash2 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
 import ProfileSidebar from '../components/ProfileSidebar'
 import '../styles/globals.css'
@@ -30,25 +31,49 @@ export default function ProfilePage() {
   const setP = (k) => (e) => setPwdForm(p => ({ ...p, [k]: e.target.value }))
   const togglePwd = (k) => setShowPwd(s => ({ ...s, [k]: !s[k] }))
 
-  const handleSaveProfile = (e) => {
+  const handleSaveProfile = async (e) => {
     e.preventDefault()
     setSaving(true)
-    setTimeout(() => { setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 3000) }, 800)
+    try {
+      await api.put('/profile', {
+        first_name: form.firstName,
+        last_name:  form.lastName,
+        email:      form.email,
+        phone:      form.phone,
+      })
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (err) {
+      console.error('Erreur profil:', err)
+    } finally {
+      setSaving(false)
+    }
   }
 
-  const handleSavePwd = (e) => {
+  const handleSavePwd = async (e) => {
     e.preventDefault()
     const errs = {}
-    if (!pwdForm.current)                     errs.current = 'Requis'
-    if (pwdForm.next.length < 8)              errs.next    = '8 caractères minimum'
-    if (pwdForm.next !== pwdForm.confirm)      errs.confirm = 'Les mots de passe ne correspondent pas'
+    if (!pwdForm.current)                errs.current = 'Requis'
+    if (pwdForm.next.length < 8)         errs.next    = '8 caractères minimum'
+    if (pwdForm.next !== pwdForm.confirm) errs.confirm = 'Les mots de passe ne correspondent pas'
     if (Object.keys(errs).length) { setPwdErrors(errs); return }
     setSavingPwd(true)
-    setTimeout(() => {
-      setSavingPwd(false); setSavedPwd(true)
+    try {
+      await api.put('/profile/password', {
+        current_password:      pwdForm.current,
+        password:              pwdForm.next,
+        password_confirmation: pwdForm.confirm,
+      })
+      setSavedPwd(true)
       setPwdForm({ current: '', next: '', confirm: '' })
       setTimeout(() => { setSavedPwd(false); setPwdOpen(false) }, 2500)
-    }, 800)
+    } catch (err) {
+      if (err.data?.errors?.current_password) {
+        setPwdErrors({ current: 'Mot de passe actuel incorrect' })
+      }
+    } finally {
+      setSavingPwd(false)
+    }
   }
 
   return (

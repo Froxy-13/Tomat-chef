@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingBag, Search, ChevronDown, X, Plus, Minus, CheckCircle, Filter } from 'lucide-react'
 import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
-import { PRODUCTS, BADGE_MAP, fmt } from '../data/products'
+import { BADGE_MAP, getMeta, fmt } from '../data/products'
 import { useCart } from '../context/CartContext'
+import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/home.css'
@@ -107,11 +108,22 @@ function HomeProductCard({ product, onAdd, index }) {
 
 /* ── Page HomePage ── */
 export default function HomePage() {
-  const [search, setSearch] = useState('')
-  const [sort, setSort]     = useState('default')
-  const [toasts, setToasts] = useState([])
+  const [search, setSearch]   = useState('')
+  const [sort, setSort]       = useState('default')
+  const [toasts, setToasts]   = useState([])
+  const [products, setProducts] = useState([])
+  const [loadingProd, setLoadingProd] = useState(true)
 
   const { addItem } = useCart()
+
+  useEffect(() => {
+    api.get('/products?per_page=12')
+      .then(res => setProducts(res.data ?? []))
+      .catch(() => {})
+      .finally(() => setLoadingProd(false))
+  }, [])
+
+  const enriched = products.map(p => ({ ...p, ...getMeta(p.slug) }))
 
   const addToCart = (product, qty = 1) => {
     addItem(product, qty)
@@ -120,9 +132,9 @@ export default function HomePage() {
     setTimeout(() => setToasts(ts => ts.filter(t => t.id !== id)), 3000)
   }
 
-  const filtered = PRODUCTS
+  const filtered = enriched
     .filter(p => p.name.toLowerCase().includes(search.toLowerCase()) ||
-                 p.volume.toLowerCase().includes(search.toLowerCase()))
+                 (p.volume ?? '').toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) => {
       if (sort === 'price-asc')  return a.price - b.price
       if (sort === 'price-desc') return b.price - a.price
@@ -152,8 +164,15 @@ export default function HomePage() {
             </div>
           </motion.div>
 
+          {/* ── Chargement ── */}
+          {loadingProd && (
+            <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--fg-muted)' }}>
+              <span className="spinner" style={{ borderTopColor: 'var(--tomato)', width: 32, height: 32 }} />
+            </div>
+          )}
+
           {/* ── Barre filtre ── */}
-          <motion.div
+          {!loadingProd && <motion.div
             className="hp-filter-bar"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -190,10 +209,10 @@ export default function HomePage() {
               </select>
               <ChevronDown size={14} className="hp-sort-chevron" aria-hidden="true" />
             </div>
-          </motion.div>
+          </motion.div>}
 
           {/* ── Grille produits ── */}
-          {filtered.length > 0 ? (
+          {!loadingProd && (filtered.length > 0 ? (
             <div className="hp-grid" role="list">
               {filtered.map((p, i) => (
                 <div key={p.id} role="listitem">
@@ -216,7 +235,7 @@ export default function HomePage() {
                 <X size={14} /> Réinitialiser
               </button>
             </motion.div>
-          )}
+          ))}
         </div>
       </main>
 

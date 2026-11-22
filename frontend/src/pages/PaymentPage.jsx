@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CreditCard, Lock, ChevronDown, CheckCircle, Package, ArrowRight } from 'lucide-react'
+import { CreditCard, Lock, ChevronDown, CheckCircle, Package, ShoppingBag, AlertCircle } from 'lucide-react'
 import { useCart } from '../context/CartContext'
+import { api } from '../lib/api'
 import { fmt } from '../data/products'
 import Navbar from '../components/Navbar'
 import '../styles/globals.css'
@@ -54,6 +55,7 @@ export default function PaymentPage() {
   const [errors, setErrors]     = useState({})
   const [loading, setLoading]   = useState(false)
   const [success, setSuccess]   = useState(false)
+  const [declined, setDeclined] = useState(false)
   const [hintOpen, setHintOpen] = useState(false)
 
   const setF = (key) => (e) => setCard(c => ({ ...c, [key]: e.target.value }))
@@ -75,17 +77,34 @@ export default function PaymentPage() {
     return e
   }
 
-  const handlePay = (e) => {
+  const handlePay = async (e) => {
     e.preventDefault()
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
+    setDeclined(false)
 
-    setTimeout(() => {
+    try {
+      const digits = card.number.replace(/\s/g, '')
+      const [month, year] = card.expiry.split('/')
+      const res = await api.post(`/orders/${number}/pay`, {
+        card_number: digits,
+        card_name:   card.holder,
+        expiry:      `${month}/${year}`,
+        cvv:         card.cvv,
+      })
+      const transaction = res?.transaction
+      if (transaction?.status === 'declined') {
+        setDeclined(true)
+      } else {
+        clearCart()
+        setSuccess(true)
+      }
+    } catch (err) {
+      setErrors({ submit: err.message ?? 'Erreur lors du paiement. Réessayez.' })
+    } finally {
       setLoading(false)
-      setSuccess(true)
-      clearCart()
-    }, 1800)
+    }
   }
 
   if (success) {
@@ -121,6 +140,33 @@ export default function PaymentPage() {
                   <ShoppingBag size={18} /> Continuer mes achats
                 </Link>
               </div>
+            </motion.div>
+          </div>
+        </main>
+      </>
+    )
+  }
+
+  if (declined) {
+    return (
+      <>
+        <Navbar />
+        <main className="pay-main">
+          <div className="pay-container">
+            <motion.div
+              className="pay-success"
+              initial={{ opacity: 0, scale: .92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: .4 }}
+            >
+              <div className="pay-success-icon" style={{ background: 'rgba(220,38,38,.12)', color: 'var(--tomato)' }}>
+                <AlertCircle size={64} />
+              </div>
+              <h1 className="pay-success-title" style={{ color: 'var(--tomato)' }}>Paiement refusé</h1>
+              <p className="pay-success-sub">Votre carte a été refusée. Vérifiez vos informations ou utilisez une autre carte.</p>
+              <button className="btn btn-primary btn-lg" onClick={() => setDeclined(false)}>
+                Réessayer
+              </button>
             </motion.div>
           </div>
         </main>
@@ -288,6 +334,12 @@ export default function PaymentPage() {
                   )}
                 </AnimatePresence>
               </div>
+
+              {errors.submit && (
+                <div className="field-error-msg" style={{ background: 'rgba(220,38,38,.08)', padding: '10px 14px', borderRadius: 8, border: '1px solid rgba(220,38,38,.2)', marginBottom: 8 }}>
+                  <AlertCircle size={14} /> {errors.submit}
+                </div>
+              )}
 
               {/* Bouton payer */}
               <motion.button

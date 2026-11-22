@@ -21,7 +21,7 @@ export default function Navbar({ currentPage = '' }) {
     navigate('/auth')
   }
 
-  const firstName = user?.name?.split(' ')[0] ?? ''
+  const firstName = user?.first_name ?? user?.name?.split(' ')[0] ?? ''
 
   return (
     <header className="nav">
@@ -72,7 +72,9 @@ export default function Navbar({ currentPage = '' }) {
                 aria-expanded={menuOpen}
                 aria-haspopup="true"
               >
-                <div className="hp-user-avatar">{initials(user.name)}</div>
+                <div className="hp-user-avatar">
+                  {initials(user.first_name ? `${user.first_name} ${user.last_name ?? ''}` : (user.name ?? ''))}
+                </div>
                 <span className="hp-user-name">{firstName}</span>
                 <ChevronDown size={14} color="rgba(255,255,255,.8)" />
               </button>
@@ -90,7 +92,9 @@ export default function Navbar({ currentPage = '' }) {
                       role="menu"
                     >
                       <div className="hp-menu-header">
-                        <div className="hp-menu-name">{user.name}</div>
+                        <div className="hp-menu-name">
+                          {user.first_name ? `${user.first_name} ${user.last_name ?? ''}`.trim() : (user.name ?? '')}
+                        </div>
                         <div className="hp-menu-email">{user.email}</div>
                       </div>
                       <div className="hp-menu-items">
