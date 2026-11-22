@@ -5,29 +5,44 @@ import {
   ShoppingBag, Truck, Shield, Star, ChevronRight,
   MapPin, Clock, Leaf, ArrowRight, Menu, X
 } from 'lucide-react'
-import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
+import ProductImage from '../components/ProductImage'
 import '../styles/globals.css'
 import '../styles/landing.css'
 
-/* ── Données ── */
+/* ── Produits vitrine ── */
 const PRODUCTS = [
   {
-    id: 1, name: 'Double concentré', volume: '70g · Sachet', price: '300 F',
+    id: 1,
+    slug: 'double-concentre-70g',
+    name: 'Le sachet du quotidien',
+    volume: '70g · Sachet nomade',
+    price: '300 F',
     badge: { label: 'Populaire', cls: 'badge-gold' },
-    Icon: TomatoIcon, iconColor: '#DC2626', bg: 'grad-a',
-    desc: 'Idéal pour les sauces du quotidien',
+    iconType: 'tomato',
+    bg: 'grad-a',
+    desc: 'Toujours prêt dans votre placard. Parfait pour improviser un thiéboudienne ou un yassa sans avoir à y penser.',
   },
   {
-    id: 2, name: 'Double concentré', volume: '400g · Boîte métal', price: '1 200 F',
+    id: 2,
+    slug: 'double-concentre-400g',
+    name: 'Le préféré des familles',
+    volume: '400g · Boîte métal',
+    price: '1 200 F',
     badge: { label: 'Best-seller', cls: 'badge-red' },
-    Icon: JarIcon, iconColor: '#D97706', bg: 'grad-b',
-    desc: 'Pour les grandes familles sénégalaises',
+    iconType: 'jar',
+    bg: 'grad-b',
+    desc: 'La référence Tomat\'chef. Le format idéal pour les grandes tablées et les plats qui mijotent longuement.',
   },
   {
-    id: 3, name: 'Double concentré', volume: '2,2kg · Grand format', price: '5 500 F',
+    id: 3,
+    slug: 'double-concentre-2kg',
+    name: 'Le format des pros',
+    volume: '2,2kg · Grand format',
+    price: '5 500 F',
     badge: { label: 'Promo −10%', cls: 'badge-green' },
-    Icon: BoxIcon, iconColor: '#059669', bg: 'grad-c',
-    desc: 'Économisez en achetant en gros',
+    iconType: 'box',
+    bg: 'grad-c',
+    desc: 'Pour les restaurateurs, traiteurs et grandes familles. Jusqu\'à 10% d\'économies sur chaque commande.',
   },
 ]
 
@@ -60,7 +75,13 @@ function ProductCard({ product, index }) {
       whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(69,10,10,.18)' }}
     >
       <div className="pc-image">
-        <product.Icon size={72} color={product.iconColor} className="pc-svg-icon" />
+        <ProductImage
+          slug={product.slug}
+          iconType={product.iconType}
+          size={72}
+          className="pc-svg-icon"
+          alt={product.name}
+        />
         <span className={`badge ${product.badge.cls} pc-badge`}>{product.badge.label}</span>
       </div>
       <div className="pc-body">

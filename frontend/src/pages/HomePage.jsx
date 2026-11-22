@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ShoppingBag, Search, ChevronDown, X, Plus, Minus, CheckCircle, Filter } from 'lucide-react'
-import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
+import { TomatoIcon } from '../components/TomatoIcon'
+import ProductImage from '../components/ProductImage'
 import { BADGE_MAP, getMeta, fmt } from '../data/products'
 import { useCart } from '../context/CartContext'
 import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/home.css'
-
-const ICON_MAP = { tomato: TomatoIcon, jar: JarIcon, box: BoxIcon }
 
 /* ── Variantes Framer ── */
 const cardVariants = {
@@ -44,7 +43,6 @@ function Toast({ product }) {
 /* ── Carte produit ── */
 function HomeProductCard({ product, onAdd, index }) {
   const [qty, setQty] = useState(1)
-  const Icon  = ICON_MAP[product.iconType] ?? TomatoIcon
   const badge = product.badge ? BADGE_MAP[product.badge] : null
 
   return (
@@ -59,7 +57,13 @@ function HomeProductCard({ product, onAdd, index }) {
       {/* Lien vers la page détail */}
       <Link to={`/produits/${product.slug}`} className="hp-card-img" aria-label={`Voir ${product.name} ${product.volume}`}>
         <div className="hp-card-icon" aria-hidden="true">
-          <Icon size={64} />
+          <ProductImage
+            images={product.images}
+            slug={product.slug}
+            iconType={product.iconType}
+            size={64}
+            alt={product.name}
+          />
         </div>
         {badge && <span className={`badge ${badge.cls} hp-card-badge`}>{badge.label}</span>}
         {product.stock < 20 && (

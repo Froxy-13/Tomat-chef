@@ -3,14 +3,12 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronRight, Plus, Minus, ShoppingBag, ArrowLeft, CheckCircle, Package, Leaf, Clock, Shield, MapPin } from 'lucide-react'
 import { useCart } from '../context/CartContext'
-import { TomatoIcon, JarIcon, BoxIcon } from '../components/TomatoIcon'
+import ProductImage from '../components/ProductImage'
 import { getMeta, BADGE_MAP, fmt } from '../data/products'
 import { api } from '../lib/api'
 import Navbar from '../components/Navbar'
 import '../styles/globals.css'
 import '../styles/product-detail.css'
-
-const ICON_MAP = { tomato: TomatoIcon, jar: JarIcon, box: BoxIcon }
 
 const SPECS = [
   { icon: Package, label: 'Poids net',      key: 'weight' },
@@ -67,7 +65,6 @@ export default function ProductDetailPage() {
     </>
   )
 
-  const Icon  = ICON_MAP[product.iconType] ?? TomatoIcon
   const badge = product.badge ? BADGE_MAP[product.badge] : null
 
   const handleAdd = () => {
@@ -112,7 +109,13 @@ export default function ProductDetailPage() {
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               >
-                <Icon size={160} />
+                <ProductImage
+                  images={product.images}
+                  slug={product.slug}
+                  iconType={product.iconType}
+                  size={160}
+                  alt={product.name}
+                />
               </motion.div>
 
               {/* Cercles déco */}
@@ -239,7 +242,6 @@ export default function ProductDetailPage() {
             <h2 className="pd-related-title" id="related-title">Vous pourriez aussi aimer</h2>
             <div className="pd-related-grid">
               {related.map((p, i) => {
-                const RelIcon = ICON_MAP[p.iconType] ?? TomatoIcon
                 const b = p.badge ? BADGE_MAP[p.badge] : null
                 return (
                   <motion.div
@@ -252,7 +254,13 @@ export default function ProductDetailPage() {
                   >
                     <Link to={`/produits/${p.slug}`} className={`pd-related-card ${p.bg}`}>
                       <div className="pd-related-img">
-                        <RelIcon size={56} />
+                        <ProductImage
+                          images={p.images}
+                          slug={p.slug}
+                          iconType={p.iconType}
+                          size={56}
+                          alt={p.name}
+                        />
                         {b && <span className={`badge ${b.cls} pd-related-badge`}>{b.label}</span>}
                       </div>
                       <div className="pd-related-body">
