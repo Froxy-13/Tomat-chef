@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Link, useSearchParams, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Eye, EyeOff, Mail, Lock, User, Phone, AlertCircle, ArrowLeft } from 'lucide-react'
-import { TomatoIcon } from '../components/TomatoIcon'
 import { useAuth } from '../context/AuthContext'
 import '../styles/globals.css'
 import '../styles/auth.css'
@@ -213,8 +212,7 @@ export default function AuthPage() {
         <div className="auth-brand-content">
           <Link to="/" className="auth-back-link"><ArrowLeft size={16} /> Retour à l'accueil</Link>
           <div className="auth-brand-logo">
-            <span className="nav-logo-dot" style={{ width: 14, height: 14, background: 'var(--gold)' }} aria-hidden="true" />
-            Tomat'chef
+            <img src="/logo.png" alt="Tomat'Chef" className="auth-logo-img" />
           </div>
           <h2 className="auth-brand-title">La meilleure tomate<br />concentrée du Sénégal.</h2>
           <p className="auth-brand-sub">Rejoignez des centaines de clients satisfaits et commandez directement en ligne.</p>
@@ -222,9 +220,6 @@ export default function AuthPage() {
             {['Livraison partout au Sénégal', 'Paiement sécurisé', 'Produit 100% naturel'].map(f => (
               <div key={f} className="auth-brand-feature"><span className="auth-brand-feature-dot" />{f}</div>
             ))}
-          </div>
-          <div className="auth-brand-visual" aria-hidden="true">
-            <TomatoIcon size={120} className="auth-tomato-deco" />
           </div>
         </div>
       </div>

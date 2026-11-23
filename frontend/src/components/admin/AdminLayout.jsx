@@ -4,7 +4,6 @@ import {
   LayoutDashboard, ClipboardList, Package, Users, MapPin,
   LogOut, Menu, X, ChevronRight, ChevronLeft, BookOpen,
 } from 'lucide-react'
-import { TomatoIcon } from '../TomatoIcon'
 import { useAdminAuth } from '../../context/AdminAuthContext'
 import '../../styles/globals.css'
 import '../../styles/admin.css'
@@ -56,8 +55,7 @@ export default function AdminLayout({ children, breadcrumb = [] }) {
 
         <div className="adm-sidebar-inner">
           <div className="adm-brand">
-            <TomatoIcon size={26} />
-            <span className="adm-brand-name">Tomat'Chef</span>
+            <img src="/logo.png" alt="Tomat'Chef" className="adm-brand-logo-img" />
             <span className="adm-brand-badge">Admin</span>
           </div>
 

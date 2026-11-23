@@ -28,8 +28,9 @@ export default function Navbar({ currentPage = '' }) {
       <div className="nav-inner">
         {/* Logo */}
         <Link to={isAdmin ? '/admin/commandes' : '/'} className="nav-logo">
-          <span className="nav-logo-dot" aria-hidden="true" />
-          Tomat'chef
+          <span className="nav-logo-circle">
+            <img src="/logo.png" alt="Tomat'Chef" className="nav-logo-img" />
+          </span>
         </Link>
 
         {/* Liens desktop */}

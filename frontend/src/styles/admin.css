@@ -34,6 +34,11 @@
   flex-shrink: 0;
 }
 .adm-brand-name { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; color: #fff; }
+.adm-brand-logo-img {
+  height: 40px; width: 40px;
+  border-radius: 50%; display: block; object-fit: contain;
+  background: #fbf2e3; flex-shrink: 0;
+}
 .adm-brand-badge {
   font-size: .58rem; font-weight: 700;
   background: var(--tomato); color: #fff;
@@ -289,8 +294,12 @@
   display: flex; flex-direction: column; align-items: center; gap: 10px;
 }
 .adm-login-logo {
-  width: 52px; height: 52px; background: var(--tomato);
-  border-radius: var(--r-lg); display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
+}
+.adm-login-logo-img {
+  height: 110px; width: 110px;
+  border-radius: 50%; display: block; object-fit: contain;
+  background: #fbf2e3;
 }
 .adm-login-title { font-family: var(--font-head); font-size: 1.3rem; font-weight: 700; color: #fff; }
 .adm-login-sub   { font-size: .82rem; color: var(--adm-sidebar-fg2); text-align: center; }
@@ -478,6 +487,10 @@
 .adm-sidebar.collapsed .adm-brand-badge,
 .adm-sidebar.collapsed .adm-user-info,
 .adm-sidebar.collapsed .adm-logout-text { display: none; }
+
+.adm-sidebar.collapsed .adm-brand-logo-img {
+  width: 34px; height: 34px;
+}
 
 .adm-sidebar.collapsed .adm-nav-link  { justify-content: center; padding: 10px 0; gap: 0; }
 .adm-sidebar.collapsed .adm-brand     { justify-content: center; gap: 0; padding: 20px 0; }

@@ -114,6 +114,16 @@
 .ord-status.cancelled  { background: rgba(220,38,38,.08);  color: var(--tomato); }
 .ord-status.cancelled  .ord-status-dot { background: var(--tomato); }
 
+/* ── Responsive ── */
+@media (max-width: 540px) {
+  .ord-main { padding: 24px 0 60px; }
+  .ord-toolbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .ord-sort-wrap { width: 100%; }
+  .ord-sort-select { width: 100%; }
+  .ord-tabs { width: 100%; }
+  .ord-tab { flex: 1; justify-content: center; padding: 7px 10px; font-size: .78rem; }
+}
+
 /* ── Empty ── */
 .ord-empty {
   display: flex; flex-direction: column; align-items: center;

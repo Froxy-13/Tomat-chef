@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { TomatoIcon } from '../../components/TomatoIcon'
 import { useAdminAuth } from '../../context/AdminAuthContext'
 import '../../styles/globals.css'
 import '../../styles/admin.css'
@@ -33,9 +32,8 @@ export default function AdminLoginPage() {
 
         <div className="adm-login-top">
           <div className="adm-login-logo">
-            <TomatoIcon size={28} color="#fff" />
+            <img src="/logo.png" alt="Tomat'Chef" className="adm-login-logo-img" />
           </div>
-          <div className="adm-login-title">Tomat'Chef Admin</div>
           <div className="adm-login-sub">Espace réservé à l'administration</div>
         </div>
 

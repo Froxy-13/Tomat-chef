@@ -166,8 +166,9 @@ export default function LandingPage() {
       <header className="nav">
         <div className="nav-inner">
           <Link to="/" className="nav-logo">
-            <span className="nav-logo-dot" aria-hidden="true" />
-            Tomat'chef
+            <span className="nav-logo-circle">
+              <img src="/logo.png" alt="Tomat'Chef" className="nav-logo-img" />
+            </span>
           </Link>
 
           {/* Desktop nav */}
@@ -445,9 +446,10 @@ export default function LandingPage() {
         <footer className="footer" id="contact">
           <div className="page-container footer-inner">
             <div className="footer-brand">
-              <div className="nav-logo footer-logo">
-                <span className="nav-logo-dot" aria-hidden="true" style={{ background: 'var(--gold)' }} />
-                Tomat'chef
+              <div className="footer-logo">
+                <span className="nav-logo-circle nav-logo-circle--lg">
+                  <img src="/logo.png" alt="Tomat'Chef" className="nav-logo-img" />
+                </span>
               </div>
               <p className="footer-tagline">La saveur authentique du Sénégal.</p>
             </div>

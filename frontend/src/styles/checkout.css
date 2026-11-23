@@ -9,8 +9,10 @@
 /* ── Steps ── */
 .co-steps {
   display: flex; align-items: center; gap: 0;
-  margin-bottom: 36px; overflow: hidden;
+  margin-bottom: 36px; overflow-x: auto; overflow-y: hidden;
+  scrollbar-width: none;
 }
+.co-steps::-webkit-scrollbar { display: none; }
 .co-step {
   display: flex; align-items: center; gap: 8px;
   font-size: .78rem; font-weight: 700;

@@ -31,7 +31,7 @@
   --font-body: 'Times New Roman', Times, serif;
 
   --r-sm: 6px;  --r-md: 10px;  --r-lg: 14px;  --r-xl: 20px;  --r-full: 9999px;
-  --nav-h: 64px;
+  --nav-h: 72px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -111,6 +111,27 @@ ul, ol { list-style: none; }
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
   flex-shrink: 0;
+}
+.nav-logo-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fbf2e3;
+  flex-shrink: 0;
+}
+.nav-logo-circle--lg {
+  width: 80px;
+  height: 80px;
+}
+.nav-logo-img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  display: block;
 }
 .nav-links {
   display: flex;

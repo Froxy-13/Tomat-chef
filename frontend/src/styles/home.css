@@ -169,8 +169,9 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  min-width: 200px;
+  min-width: 180px;
 }
+@media (max-width: 480px) { .hp-sort-wrap { min-width: 0; width: 100%; } }
 .hp-sort-icon {
   position: absolute;
   left: 14px;
@@ -333,3 +334,11 @@
 .grad-a { background: linear-gradient(135deg, #FEF2F2 0%, #FECACA 100%); }
 .grad-b { background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); }
 .grad-c { background: linear-gradient(135deg, #ECFDF5 0%, #A7F3D0 100%); }
+
+/* ── Responsive mobile ── */
+@media (max-width: 480px) {
+  .hp-main { padding: 24px 0 60px; }
+  .hp-filter-bar { gap: 8px; }
+  .hp-search-wrap { min-width: 0; }
+  .cart-toast { white-space: normal; max-width: calc(100vw - 48px); font-size: .82rem; padding: 10px 14px; }
+}
