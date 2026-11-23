@@ -20,7 +20,7 @@ class RecipeSeeder extends Seeder
                 'difficulty'       => 'Moyen',
                 'servings'         => 6,
                 'tomato_quantity'   => "4 cuillères à soupe généreuses (environ 120g de Tomat'Chef)",
-                'image'            => 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+                'image'            => 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80',
                 'featured'         => true,
                 'ingredients'      => [
                     ['name' => "Concentré de tomate Tomat'Chef (Bouteille 750g)", 'amount' => '120g', 'isTomatoPaste' => true],
@@ -56,7 +56,7 @@ class RecipeSeeder extends Seeder
                 'difficulty'       => 'Expert',
                 'servings'         => 8,
                 'tomato_quantity'   => "150g de Tomat'Chef",
-                'image'            => 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+                'image'            => 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=800&q=80',
                 'featured'         => true,
                 'ingredients'      => [
                     ['name' => "Concentré Tomat'Chef", 'amount' => '150g', 'isTomatoPaste' => true],
