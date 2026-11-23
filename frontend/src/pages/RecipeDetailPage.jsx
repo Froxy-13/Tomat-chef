@@ -4,7 +4,7 @@ import { Clock, Users, ChefHat, Flame, CheckCircle2, ArrowLeft, Leaf } from 'luc
 import Navbar from '../components/Navbar'
 import '../styles/recipes.css'
 
-const BASE = 'http://127.0.0.1:8000/api/v1'
+import { API_URL as BASE } from '../lib/config'
 
 const DIFFICULTY_COLOR = {
   Facile: '#22c55e',

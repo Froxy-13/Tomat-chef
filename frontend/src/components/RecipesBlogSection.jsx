@@ -7,7 +7,7 @@ import { TomatoIcon } from './TomatoIcon'
 import { useCart } from '../context/CartContext'
 import '../styles/recipes-section.css'
 
-const BASE_API = 'http://127.0.0.1:8000/api/v1'
+import { API_URL as BASE_API } from '../lib/config'
 
 const CATEGORIES = [
   { id: 'all',             label: 'Toutes les Recettes' },

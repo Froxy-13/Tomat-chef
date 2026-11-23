@@ -4,7 +4,7 @@ import { Clock, Users, ChefHat, Flame, ArrowRight, Search } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import '../styles/recipes.css'
 
-const BASE = 'http://127.0.0.1:8000/api/v1'
+import { API_URL as BASE } from '../lib/config'
 
 const CATEGORIES = ['Toutes', 'Africaine', 'Méditerranéenne', 'Familiale', 'Rapide']
 

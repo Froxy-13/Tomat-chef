@@ -8,6 +8,7 @@ import {
 import { TomatoIcon } from '../components/TomatoIcon'
 import ProductImage from '../components/ProductImage'
 import { getMeta, fmt as fmtPrice } from '../data/products'
+import { API_URL } from '../lib/config'
 import '../styles/globals.css'
 import '../styles/landing.css'
 import '../styles/reviews.css'
@@ -146,10 +147,10 @@ export default function LandingPage() {
   const heroInView = useInView(heroRef, { once: true })
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/v1/products?per_page=3')
+    fetch(`${API_URL}/products?per_page=3`)
       .then(r => r.json()).then(d => setProducts(d.data ?? d ?? []))
       .catch(() => {})
-    fetch('http://127.0.0.1:8000/api/v1/reviews')
+    fetch(`${API_URL}/reviews`)
       .then(r => r.json()).then(d => setReviews(d ?? []))
       .catch(() => {})
   }, [])

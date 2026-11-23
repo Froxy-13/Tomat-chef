@@ -3,9 +3,6 @@ backend/vendor/
 backend/.env
 backend/.env.backup
 backend/storage/logs/*.log
-backend/storage/framework/cache/
-backend/storage/framework/sessions/
-backend/storage/framework/views/
 backend/node_modules/
 backend/public/hot
 backend/public/storage

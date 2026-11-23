@@ -1,4 +1,5 @@
-const BASE = 'http://127.0.0.1:8000/api/v1'
+import { API_URL } from './config'
+const BASE = API_URL
 
 async function adminApiRequest(path, options = {}) {
   const token = localStorage.getItem('tc_admin_token')
